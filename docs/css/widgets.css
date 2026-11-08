@@ -203,6 +203,11 @@
   color: var(--accent-strong);
 }
 
+.feedback.warn {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
 /* --------------------------------------------------------------------------
    Pipeline sorter
    -------------------------------------------------------------------------- */
@@ -392,6 +397,199 @@
   color: var(--accent-strong);
   font-size: 13.5px;
   font-weight: 650;
+}
+
+/* --------------------------------------------------------------------------
+   Backpropagation graph
+   -------------------------------------------------------------------------- */
+
+.bp-flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.bp-node {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  opacity: 0.42;
+}
+
+.bp-node.revealed {
+  opacity: 1;
+}
+
+.bp-label {
+  color: var(--text-faint);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.bp-sub {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.bp-value {
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.bp-local,
+.bp-grad {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.bp-grad {
+  color: var(--violet);
+}
+
+/* --------------------------------------------------------------------------
+   Matrix lab
+   -------------------------------------------------------------------------- */
+
+.matrix-wrap {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.matrix-bracket {
+  color: var(--text-faint);
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 1;
+}
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 58px);
+  gap: 5px;
+}
+
+.matrix-grid input {
+  width: 58px;
+  padding: 5px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: center;
+}
+
+.matrix-vector {
+  display: grid;
+  gap: 5px;
+}
+
+.matrix-vector input {
+  width: 58px;
+  padding: 5px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Softmax and distribution lab
+   -------------------------------------------------------------------------- */
+
+.bar-chart {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 64px;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.bar-track {
+  height: 20px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--bg-soft);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--violet));
+  transition: width 180ms ease;
+}
+
+.bar-value {
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.ce-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.ce-column {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+}
+
+.ce-column h4 {
+  margin: 0 0 10px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ce-row {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) 44px;
+  gap: 8px;
+  align-items: center;
+  margin-top: 7px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.ce-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.ce-row output {
+  color: var(--text-muted);
+  text-align: right;
+}
+
+@media (max-width: 620px) {
+  .ce-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* --------------------------------------------------------------------------

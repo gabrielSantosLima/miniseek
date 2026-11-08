@@ -22,12 +22,14 @@
 
     const questionHtml = questions
       .map(function (question, index) {
+        const promptId = "quiz-" + quizId + "-prompt-" + index;
         return (
-          '<fieldset class="quiz-question" data-question-index="' + index + '">' +
-          '<legend class="quiz-prompt">' +
+          '<div class="quiz-question" data-question-index="' + index +
+          '" role="group" aria-labelledby="' + promptId + '">' +
+          '<p class="quiz-prompt" id="' + promptId + '">' +
           '<span class="sr-only">Question ' + (index + 1) + ".</span> " +
           question.prompt +
-          "</legend>" +
+          "</p>" +
           '<div class="quiz-options">' +
           question.options
             .map(function (option, optionIndex) {
@@ -36,7 +38,7 @@
             .join("") +
           "</div>" +
           '<div class="quiz-explanation" data-explanation="' + index + '"></div>' +
-          "</fieldset>"
+          "</div>"
         );
       })
       .join("");
@@ -69,9 +71,9 @@
 
       let score = 0;
       questions.forEach(function (question, index) {
-        const fieldset = form.querySelector('[data-question-index="' + index + '"]');
-        const options = fieldset.querySelectorAll(".quiz-option");
-        const explanation = fieldset.querySelector('[data-explanation="' + index + '"]');
+        const questionEl = form.querySelector('[data-question-index="' + index + '"]');
+        const options = questionEl.querySelectorAll(".quiz-option");
+        const explanation = questionEl.querySelector('[data-explanation="' + index + '"]');
         const selected = form.querySelector(
           'input[data-question="' + index + '"]:checked'
         );

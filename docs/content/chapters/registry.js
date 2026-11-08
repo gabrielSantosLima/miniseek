@@ -11,7 +11,8 @@
     "Part II — Neural Networks and Backpropagation",
     "Part III — Sequence Models",
     "Part IV — Transformers",
-    "Part V — Capstone Blueprint"
+    "Part V — Capstone Blueprint",
+    "Part VI — Minimal LLM Bridge"
   ];
 
   MS.chapters = [
@@ -140,6 +141,27 @@
       title: "Capstone Blueprint: Design Your LLM",
       short: "Capstone blueprint",
       hours: 8
+    },
+    {
+      id: 19,
+      part: "Part VI — Minimal LLM Bridge",
+      title: "Causal Language Modeling Data Pipeline",
+      short: "Causal LM data pipeline",
+      hours: 4
+    },
+    {
+      id: 20,
+      part: "Part VI — Minimal LLM Bridge",
+      title: "Numerical Stability for LLM Training",
+      short: "Numerical stability",
+      hours: 4
+    },
+    {
+      id: 21,
+      part: "Part VI — Minimal LLM Bridge",
+      title: "The Minimal Viable LLM",
+      short: "Minimal viable LLM",
+      hours: 4
     }
   ];
 

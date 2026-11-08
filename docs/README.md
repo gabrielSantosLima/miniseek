@@ -14,14 +14,15 @@ Study material for the project **From Scratch to an LLM**.
 
 ## Current status
 
-The guide shell and all 18 chapters are implemented:
+The guide shell and all 21 chapters are implemented:
 
 - Chapter navigation, hash routing, light/dark theme, and local progress tracking.
-- Interactive widgets: LLM pipeline sorter, function/tangent explorer, secant-to-tangent lab, chain-rule builder, activation lab, gradient-descent lab, 2D gradient-field lab, matrix/linear-map lab, softmax/temperature lab, cross-entropy/KL lab, MLP approximation trainer, backpropagation step-through, gradient-check lab, optimizer race, recurrent gradient-flow lab, LSTM gate calculator, GRU gate calculator, attention-alignment lab, attention heatmap, Transformer shape tracer, sampling lab, and capstone configurator.
-- Worked examples in every chapter, including sequence probability, calculus rules, matrix algebra, Bayes/softmax/KL, perceptron training, full backpropagation with a solved exercise, optimizer updates, RNN gradient flow, LSTM/GRU gates, attention weights/context, a tiny Transformer block, LLM loss/perplexity/top-p, and capstone parameter budgeting.
+- Interactive widgets: LLM pipeline sorter, function/tangent explorer, secant-to-tangent lab, chain-rule builder, activation lab, gradient-descent lab, 2D gradient-field lab, matrix/linear-map lab, softmax/temperature lab, cross-entropy/KL lab, MLP approximation trainer, backpropagation step-through, gradient-check lab, optimizer race, recurrent gradient-flow lab, LSTM gate calculator, GRU gate calculator, attention-alignment lab, attention heatmap, Transformer shape tracer, sampling lab, capstone configurator, causal-LM window builder, and numerical-stability lab.
+- Worked examples in every chapter, including sequence probability, calculus rules, matrix algebra, Bayes/softmax/KL, perceptron training, full backpropagation with a solved exercise, optimizer updates, RNN gradient flow, LSTM/GRU gates, attention weights/context, a tiny Transformer block, LLM loss/perplexity/top-p, capstone parameter budgeting, data windows, overflow-safe softmax, and the minimal model size.
 - Quizzes and mastery checklists for all chapters.
+- Part VI adds the minimal-LLM bridge: data pipeline, numerical stability, and the minimal viable training/generation blueprint.
 
-No LLM is implemented or trained in this phase. The guide is the theory and design prerequisite for the later implementation phase.
+No LLM is implemented or trained in this repository. The guide is the theory and design prerequisite for your manual implementation.
 
 ## Run the guide
 
@@ -41,7 +42,6 @@ needs network access. If the CDN is unavailable, the raw LaTeX remains visible.
 
 ## Next steps
 
-1. Review all 18 chapters for pacing, clarity, and calculation errors.
+1. Review all 21 chapters for pacing, clarity, and calculation errors.
 2. Test the guide on mobile and with the KaTeX CDN unavailable.
-3. Begin the implementation ladder described in Chapter 18: scalar autodiff,
-   MLP, RNN, LSTM/GRU, Transformer block, and a small GPT.
+3. Use the guide as the theory and design reference for your manual implementation.

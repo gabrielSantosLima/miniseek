@@ -143,15 +143,15 @@ implementations.
 
 | Item | Value |
 |---|---|
-| Chapters | 18 |
-| Estimated study time | ~240 hours |
+| Chapters | 21 |
+| Estimated study time | ~254 hours |
 | Suggested pace | 10–15 hours/week |
-| Calendar estimate | 20–24 weeks |
+| Calendar estimate | 22–26 weeks |
 | Review | 15 minutes at the start of every session + one review week per part |
 | Primary math text | James Stewart, *Calculus* (8th or 9th ed.) |
 | Supporting math texts | *Mathematics for Machine Learning*; MIT 18.06; matrix-calculus paper |
 
-### 3.1 Suggested 22-week calendar
+### 3.1 Suggested 24-week calendar
 
 | Week | Chapter | Focus |
 |---|---|---|
@@ -173,8 +173,10 @@ implementations.
 | 19–20 | Ch. 16 | The Transformer architecture |
 | 21 | Ch. 17 | From Transformer to LLM |
 | 22 | Ch. 18 | Capstone blueprint and final review |
+| 23 | Ch. 19–20 | Causal LM data pipeline and numerical stability |
+| 24 | Ch. 21 | Minimal viable LLM and final review |
 
-Weeks 6, 8, 12, 16, 20, and 22 include a cumulative review session.
+Weeks 6, 8, 12, 16, 20, 22, and 24 include a cumulative review session.
 
 ### 3.2 Weekly rhythm
 
@@ -270,7 +272,10 @@ Conventions:
 | 16 | Transformer architecture | blocks, residuals, positions, shapes | Attention paper; LayerNorm | 20 |
 | 17 | Transformer to LLM | tokenization, decoding, scaling | GPT-3; scaling laws; word2vec | 16 |
 | 18 | Capstone blueprint | design, budgets, evaluation | all of the above | 8 |
-| | **Total** | | | **242** |
+| 19 | Causal LM data pipeline | windows, shift, padding | guide Ch. 19; DLB Ch. 10 | 4 |
+| 20 | Numerical stability | stable softmax/CE, clipping | guide Ch. 20; DLB Ch. 4 | 4 |
+| 21 | Minimal viable LLM | minimal architecture and loop | guide Ch. 21; Ch. 16/18 | 4 |
+| | **Total** | | | **254** |
 
 ---
 
@@ -1378,6 +1383,78 @@ without writing implementation code.
 
 ---
 
+# Part VI — Minimal LLM Bridge
+
+> This part closes the gap between the theory guide and a first manual
+> implementation. It does not implement the model; it defines the minimum data,
+> numerical, and training loops required for a small working LLM.
+
+## Chapter 19 — Causal Language Modeling Data Pipeline
+
+**Goal:** turn a token corpus into correctly shifted input/target batches.
+
+### Theory
+
+- Tokenization output as one long sequence of IDs.
+- Context windows of length $T$ and the need for $T+1$ tokens.
+- Input $[c_i,\ldots,c_{i+T-1}]$ and target $[c_{i+1},\ldots,c_{i+T}]$.
+- Non-overlapping vs sliding windows; packing documents.
+- Batching to $(B,T)$; padding and ignore-index labels.
+- Train/validation splits at document level; tokenizer fitted on training data only.
+
+### Lab and mastery
+
+- Interactive window builder.
+- Checklist: shift explanation, window construction, padding, leakage, batch shapes.
+
+**Estimated time:** 4 hours.
+
+## Chapter 20 — Numerical Stability for LLM Training
+
+**Goal:** implement softmax, cross-entropy, and updates without overflow,
+underflow, or silent NaNs.
+
+### Theory
+
+- Floating-point exponent limits and failure modes.
+- Stable softmax: subtract the maximum logit.
+- Log-sum-exp and stable cross-entropy: $\operatorname{logsumexp}(z)-z_c$.
+- Masking caveats: avoid all-masked rows.
+- Gradient clipping and NaN/Inf assertions in the training loop.
+
+### Lab and mastery
+
+- Stable-vs-naive softmax table with safe, overflow, and underflow presets.
+- Checklist: stable formulas, clipping, finite-gradient checks.
+
+**Estimated time:** 4 hours.
+
+## Chapter 21 — The Minimal Viable LLM
+
+**Goal:** define the smallest complete loop that trains and generates.
+
+### Theory
+
+- Success criteria: decreasing loss, finite validation loss, overfit one batch,
+  coherent samples, reproducibility.
+- Minimal architecture: character-level tokenizer, 2–4 layers, $d=64$–$128$,
+  2–4 heads, context 64–128, FFN $4d$, pre-norm LayerNorm.
+- Six-step loop: windows, forward, stable loss, backward, clip/update, evaluate.
+- Debug triage: stuck loss, NaN loss, overfitting, garbage samples, failure to
+  overfit a batch.
+- Milestones: overfit one batch, tiny corpus, coherent samples, validation,
+  then scale.
+
+### Lab and mastery
+
+- Worked example sizing a 0.106M-parameter model.
+- Quiz on scope and debugging.
+- Checklist: success criteria, architecture, loop, failure modes.
+
+**Estimated time:** 4 hours.
+
+---
+
 # Appendices
 
 ## Appendix A — Core Formula Sheet
@@ -1578,7 +1655,7 @@ one item at level 5.
 
 ## 7. What Comes After This Plan
 
-> **Implementation status (2026-11-08):** all 18 chapters of the guide are
+> **Implementation status (2026-11-08):** all 21 chapters of the guide are
 > implemented in `docs/index.html`, including theory, worked examples,
 > interactive labs, quizzes, and mastery checklists.
 

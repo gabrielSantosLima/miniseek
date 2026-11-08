@@ -1575,6 +1575,10 @@ one item at level 5.
 
 ## 7. What Comes After This Plan
 
+> **Implementation status (2026-11-08):** the guide shell, reusable exercise
+> framework, and Chapters 1–4 are implemented in `docs/index.html`. Chapters
+> 5–18 appear as planned placeholders and will be written in order.
+
 Once this plan is approved:
 
 1. Build the HTML/CSS/JS shell and navigation.

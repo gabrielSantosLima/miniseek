@@ -4,24 +4,44 @@ Study material for the project **From Scratch to an LLM**.
 
 ## Contents
 
-| File | Purpose |
+| Path | Purpose |
 |---|---|
+| [`index.html`](index.html) | Interactive study guide (static HTML/CSS/JS). |
 | [`STUDY_PLAN.md`](STUDY_PLAN.md) | The complete 18-chapter curriculum, schedule, theory outline, interactive exercise specifications, and mastery checklists. |
 | [`REFERENCES.md`](REFERENCES.md) | Annotated bibliography, chapter-to-source map, download log, and licensing notes. |
 | [`references/`](references/) | Locally downloaded papers and books (PDF). |
+| `css/`, `js/`, `content/` | Guide styles, application logic, widgets, and chapter content. |
 
 ## Current status
 
-Planning phase only. No guide application and no LLM code have been implemented
-yet.
+The guide shell and Chapters 1–4 are implemented:
 
-The next phase is to build the static HTML/CSS/JS guide described in
-`STUDY_PLAN.md` §2, starting with the shell, navigation, progress tracking, and
-the reusable exercise widgets.
+- Chapter navigation, hash routing, light/dark theme, and local progress tracking.
+- Interactive widgets: LLM pipeline sorter, function/tangent explorer, secant-to-tangent lab, chain-rule builder, activation lab, and gradient-descent lab.
+- Quizzes and mastery checklists for Chapters 1–4.
+- Chapters 5–18 are listed in the navigation with a "planned" placeholder.
 
-## Quick start for a learner
+No LLM is implemented or trained in this phase.
 
-1. Read `STUDY_PLAN.md` §1–§5.
-2. Open `REFERENCES.md` §3 to see which papers belong to the current chapter.
-3. Follow the 22-week calendar in `STUDY_PLAN.md` §3.1.
-4. Do not start the implementation ladder until Chapter 18 is complete.
+## Run the guide
+
+The guide is a static site. From the repository root:
+
+```bash
+python -m http.server 8123 --directory docs
+```
+
+Then open <http://localhost:8123/>.
+
+Opening `docs/index.html` directly also works because the guide uses classic
+scripts, but a local server avoids browser restrictions and is recommended.
+
+The mathematical notation is rendered with KaTeX from a CDN, so the first load
+needs network access. If the CDN is unavailable, the raw LaTeX remains visible.
+
+## Next steps
+
+1. Review Chapters 1–4 for pacing and difficulty.
+2. Add Chapters 5–7 (multivariable calculus, linear algebra, probability) and
+   their widgets.
+3. Continue in chapter order up to the Transformer and capstone chapters.

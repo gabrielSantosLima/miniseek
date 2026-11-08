@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive study guide from calculus to a Transformer-based language model.">
+  <title>From Scratch to an LLM — Study Guide</title>
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/chapters.css">
+  <link rel="stylesheet" href="css/widgets.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+    crossorigin="anonymous"
+  >
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    crossorigin="anonymous"
+  ></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Study navigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">∑</div>
+        <div class="brand-text">
+          <strong>From Scratch to an LLM</strong>
+          <span>Interactive study guide</span>
+        </div>
+      </div>
+
+      <div class="overall-progress" aria-live="polite">
+        <div class="overall-progress-head">
+          <span>Overall progress</span>
+          <strong id="overall-percent">0%</strong>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="overall-fill"></div>
+        </div>
+        <div class="overall-progress-note" id="overall-note">0 of 18 chapters complete</div>
+      </div>
+
+      <nav id="chapter-nav" class="chapter-nav" aria-label="Chapters"></nav>
+
+      <div class="sidebar-footer">
+        <a href="STUDY_PLAN.md">Read the full study plan</a>
+        <a href="REFERENCES.md">Bibliography</a>
+      </div>
+    </aside>
+
+    <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menu-toggle" type="button"
+                aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+          <span aria-hidden="true">☰</span>
+        </button>
+
+        <div class="breadcrumb" id="breadcrumb">Part 0 — Orientation</div>
+
+        <div class="topbar-actions">
+          <span class="progress-badge" id="progress-badge">0% complete</span>
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch theme">
+            <span aria-hidden="true" id="theme-icon">◐</span>
+          </button>
+        </div>
+      </header>
+
+      <article id="content" class="content" tabindex="-1"></article>
+    </main>
+  </div>
+
+  <script defer src="js/math.js"></script>
+  <script defer src="js/progress.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/quiz.js"></script>
+  <script defer src="js/widgets/plot.js"></script>
+  <script defer src="js/widgets/pipeline.js"></script>
+  <script defer src="js/widgets/function-explorer.js"></script>
+  <script defer src="js/widgets/secant-tangent.js"></script>
+  <script defer src="js/widgets/activation-lab.js"></script>
+  <script defer src="js/widgets/chain-rule.js"></script>
+  <script defer src="js/widgets/gradient-descent.js"></script>
+  <script defer src="content/chapters/registry.js"></script>
+  <script defer src="content/chapters/ch01.js"></script>
+  <script defer src="content/chapters/ch02.js"></script>
+  <script defer src="content/chapters/ch03.js"></script>
+  <script defer src="content/chapters/ch04.js"></script>
+  <script defer src="js/router.js"></script>
+  <script defer src="js/app.js"></script>
+</body>
+</html>

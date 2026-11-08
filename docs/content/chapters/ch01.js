@@ -25,6 +25,7 @@
           <a href="#pipeline">The pipeline</a>
           <a href="#ladder">The from-scratch ladder</a>
           <a href="#read-papers">Reading papers</a>
+          <a href="#worked">Worked example</a>
           <a href="#check">Check your understanding</a>
         </nav>
       </header>
@@ -238,12 +239,88 @@
         </ul>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">1.5</span> Worked example: probability of a tiny sequence</h2>
+        <div class="prose">
+          <p>
+            This synthetic example shows how the autoregressive factorization turns
+            three conditional predictions into one sequence probability. The numbers
+            are chosen for arithmetic clarity, not taken from a trained model.
+          </p>
+          <p>
+            Suppose the tokenizer produces the sequence “cat sat on” and the model
+            assigns the following conditional probabilities:
+          </p>
+          <table>
+            <thead><tr><th>Position</th><th>Token</th><th>Conditional probability</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>cat</td><td>$p(\\text{cat}\\mid\\text{&lt;s&gt;})=0.6$</td></tr>
+              <tr><td>2</td><td>sat</td><td>$p(\\text{sat}\\mid\\text{&lt;s&gt;},\\text{cat})=0.5$</td></tr>
+              <tr><td>3</td><td>on</td><td>$p(\\text{on}\\mid\\text{&lt;s&gt;},\\text{cat},\\text{sat})=0.8$</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="worked-example">
+          <h3>From conditionals to a sequence loss</h3>
+          <p class="example-intro">
+            Apply the chain rule of probability, then convert the result to
+            negative log-likelihood.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>Multiply the conditional probabilities</h4>
+              <p>
+                $$p(\\text{cat},\\text{sat},\\text{on})
+                  =0.6\\cdot0.5\\cdot0.8=0.24.$$
+                The sequence is more improbable than any individual token because each
+                additional conditional factor is less than one.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>Compute the negative log-likelihood</h4>
+              <p>
+                $$-\\log p(\\text{cat},\\text{sat},\\text{on})
+                  =-\\log(0.24)\\approx1.4271\\ \\text{nats}.$$
+                This is the training loss for the whole sequence.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>Average over tokens</h4>
+              <p>
+                $$\\mathcal{L}=\\frac{1.4271}{3}\\approx0.4757\\ \\text{nats/token}.$$
+                Averaging prevents longer sequences from automatically producing a
+                larger loss and makes runs with different lengths comparable.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> the product $0.6\\cdot0.5\\cdot0.8=0.24$ is less
+            than $1$, so its logarithm is negative and the negative log-likelihood is
+            positive. Dividing $1.4271$ by $3$ gives $0.4757$, which lies between the
+            smallest and largest per-token losses ($-\\log0.8\\approx0.2231$ and
+            $-\\log0.5\\approx0.6931$).
+          </div>
+        </div>
+      </section>
+
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">1.5</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">1.6</span> Check your understanding</h2>
         <div data-widget="diagnostic"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">1.6</span> Mastery checklist
+          <span class="section-index">1.7</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(1, [
           "Draw the full text-to-next-token pipeline from memory.",

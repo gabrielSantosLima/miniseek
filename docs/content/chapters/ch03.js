@@ -24,6 +24,7 @@
           <a href="#rules">Core rules</a>
           <a href="#chain">The chain rule</a>
           <a href="#activations">Activation derivatives</a>
+          <a href="#worked">Worked example</a>
           <a href="#labs">Labs</a>
           <a href="#check">Check your understanding</a>
         </nav>
@@ -186,18 +187,102 @@
         </div>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">3.4</span> Worked example: rules in combination</h2>
+        <div class="prose">
+          <p>
+            Real derivatives rarely use one rule at a time. This example combines the
+            chain rule, quotient rule, product rule, and the activation derivatives
+            from the chapter.
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <h3>Four derivatives, one method</h3>
+          <p class="example-intro">
+            Differentiate each function first, then substitute the requested point.
+            Check every result with a second rule where possible.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>Chain rule and power rule</h4>
+              <p>
+                For $h(x)=(3x^2+1)^4$, let $u=3x^2+1$. Then
+              </p>
+              <p>
+                $$h'(x)=4u^3\\cdot6x=24x(3x^2+1)^3.$$
+                At $x=1$, $h'(1)=24\\cdot1\\cdot4^3=24\\cdot64=1536$.
+                The function value is $h(1)=4^4=256$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>Quotient rule</h4>
+              <p>
+                For $y=(x^2+1)/(x-1)$,
+              </p>
+              <p>
+                $$y'=\\frac{2x(x-1)-(x^2+1)}{(x-1)^2}.$$
+                At $x=2$:
+                $y'(2)=\\frac{4(1)-5}{1^2}=-1$.
+                The function value is $y(2)=5/1=5$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>Product rule</h4>
+              <p>
+                For $p(x)=x^2e^x$,
+              </p>
+              <p>
+                $$p'(x)=2xe^x+x^2e^x=xe^x(x+2).$$
+                At $x=1$, $p'(1)=1\\cdot e\\cdot3=3e\\approx8.1548$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">4</span>
+            <div>
+              <h4>Activation derivatives</h4>
+              <p>
+                At $z=0$, $\\sigma(0)=0.5$ and
+                $\\sigma'(0)=\\sigma(0)(1-\\sigma(0))=0.5\\cdot0.5=0.25$.
+                For tanh, $\\tanh(0)=0$ and $\\tanh'(0)=1-0^2=1$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> the outer derivative in step 1 is $4u^3$ and the
+            inner derivative is $6x$, so their product is $24x(3x^2+1)^3$. The
+            quotient-rule numerator is $2x(x-1)-(x^2+1)$, which is $-1$ at $x=2$.
+            The product rule splits $x^2e^x$ into $2xe^x+x^2e^x$. The sigmoid
+            derivative at zero is $0.5\\cdot0.5=0.25$.
+          </div>
+        </div>
+      </section>
+
       <section class="chapter-section" id="labs">
-        <h2 class="section-title"><span class="section-index">3.4</span> Labs</h2>
+        <h2 class="section-title"><span class="section-index">3.5</span> Labs</h2>
         <div data-widget="chain-rule"></div>
         <div data-widget="activation-lab"></div>
       </section>
 
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">3.5</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">3.6</span> Check your understanding</h2>
         <div data-widget="chain-quiz"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">3.6</span> Mastery checklist
+          <span class="section-index">3.7</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(3, [
           "Differentiate every elementary function in the chapter without a table.",
@@ -209,7 +294,7 @@
       </section>
 
       <section class="chapter-section">
-        <h2 class="section-title"><span class="section-index">3.7</span> Reading</h2>
+        <h2 class="section-title"><span class="section-index">3.8</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Stewart, Cálculo Vol. 1 — Chapter 3", source: "§3.1–3.6 differentiation rules; §3.8–3.9 exponential, logarithmic, and related rates" },
           { title: "Parr & Howard, The Matrix Calculus You Need For Deep Learning — §2–3", source: "Read after the scalar chain rule is solid" }

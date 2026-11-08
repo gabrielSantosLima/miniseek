@@ -25,6 +25,7 @@
           <a href="#optimizers">Optimizers</a>
           <a href="#stability">Initialization and normalization</a>
           <a href="#regularization">Regularization</a>
+          <a href="#worked">Worked example</a>
           <a href="#lab">Lab</a>
           <a href="#check">Check your understanding</a>
         </nav>
@@ -260,17 +261,112 @@
         </div>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">10.5</span> Worked example: one step of each optimizer</h2>
+        <div class="prose">
+          <p>
+            Use the same scalar parameter and gradient to compare the update rules.
+            Let $\\theta=1$, $g=0.5$, and $\\eta=0.1$. The sign matters: a positive
+            gradient means the loss increases when $\\theta$ increases, so every
+            method moves $\\theta$ downward.
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <h3>SGD, momentum, Adam, and weight decay</h3>
+          <p class="example-intro">
+            Compute each update independently, then check that all four move in the
+            descent direction.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>SGD</h4>
+              <p>
+                $$\\theta_{\\text{new}}=\\theta-\\eta g=1-0.1\\cdot0.5=0.95.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>Momentum</h4>
+              <p>
+                With $\\beta=0.9$ and previous velocity $v_{\\text{prev}}=0.2$:
+              </p>
+              <p>
+                $$v_{\\text{new}}=0.9\\cdot0.2+0.5=0.18+0.5=0.68,$$
+                $$\\theta_{\\text{new}}=1-0.1\\cdot0.68=0.932.$$
+                Momentum takes a larger step than SGD because it accumulates the
+                current gradient with the previous velocity.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>Adam, first step</h4>
+              <p>
+                Start with $m_0=0$, $v_0=0$, $\\beta_1=0.9$, $\\beta_2=0.999$.
+                At $k=1$:
+              </p>
+              <p>
+                $$m_1=0.9\\cdot0+0.1\\cdot0.5=0.05,$$
+                $$v_1=0.999\\cdot0+0.001\\cdot0.5^2=0.00025.$$
+                Bias correction:
+                $$\\hat m_1=\\frac{0.05}{1-0.9}=0.5,\\qquad
+                  \\hat v_1=\\frac{0.00025}{1-0.999}=0.25.$$
+                Therefore
+                $$\\theta_{\\text{new}}
+                  =1-0.1\\cdot\\frac{0.5}{\\sqrt{0.25}+10^{-8}}
+                  \\approx1-0.1\\cdot1=0.9.$$
+                The adaptive step is exactly $1$ in this first step, so Adam moves
+                further than SGD.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">4</span>
+            <div>
+              <h4>Weight decay</h4>
+              <p>
+                Add $\\lambda\\theta^2$ with $\\lambda=0.01$. Its gradient is
+                $2\\lambda\\theta=0.02$, so the total gradient is
+                $0.5+0.02=0.52$:
+              </p>
+              <p>
+                $$\\theta_{\\text{new}}=1-0.1\\cdot0.52=0.948.$$
+                The decay term pulls the parameter slightly closer to zero.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> every update is less than the starting value
+            $1$, which is correct because the gradient is positive. SGD uses the raw
+            gradient; momentum uses $0.9v_{\\text{prev}}+g$; Adam normalizes the
+            first moment by the square root of the second moment after bias
+            correction; weight decay adds $2\\lambda\\theta$ to the gradient. The
+            arithmetic gives $0.95$, $0.932$, $0.9$, and $0.948$ respectively.
+          </div>
+        </div>
+      </section>
+
       <section class="chapter-section" id="lab">
-        <h2 class="section-title"><span class="section-index">10.5</span> Lab</h2>
+        <h2 class="section-title"><span class="section-index">10.6</span> Lab</h2>
         <div data-widget="optimizer-race"></div>
       </section>
 
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">10.6</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">10.7</span> Check your understanding</h2>
         <div data-widget="training-quiz"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">10.7</span> Mastery checklist
+          <span class="section-index">10.8</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(10, [
           "Explain the difference between batch, stochastic, and mini-batch gradient descent.",
@@ -283,7 +379,7 @@
       </section>
 
       <section class="chapter-section">
-        <h2 class="section-title"><span class="section-index">10.8</span> Reading</h2>
+        <h2 class="section-title"><span class="section-index">10.9</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Goodfellow, Bengio & Courville, Deep Learning — Chapters 7–8", source: "Regularization, optimization, and training" },
           { title: "Kingma & Ba (2014), Adam", source: "The original Adam paper" },

@@ -24,6 +24,7 @@
           <a href="#distributions">Distributions</a>
           <a href="#bayes">Bayes and expectation</a>
           <a href="#information">Information theory</a>
+          <a href="#worked">Worked example</a>
           <a href="#labs">Labs</a>
           <a href="#check">Check your understanding</a>
         </nav>
@@ -196,18 +197,118 @@
         </div>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">7.4</span> Worked example: Bayes, softmax, and information</h2>
+        <div class="prose">
+          <p>
+            These are three short calculations that use the chapter's core formulas.
+            The probabilities are synthetic and chosen so that the arithmetic is easy
+            to follow.
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <h3>From a posterior to a cross-entropy</h3>
+          <p class="example-intro">
+            Work each part separately; the final review checks that the pieces agree.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>Bayes' rule with a rare event</h4>
+              <p>
+                Suppose $P(D)=0.01$, $P(+\\mid D)=0.95$, and
+                $P(+\\mid\\neg D)=0.05$. First compute the evidence:
+              </p>
+              <p>
+                $$P(+)=0.95\\cdot0.01+0.05\\cdot0.99
+                  =0.0095+0.0495=0.059.$$
+                Then
+              </p>
+              <p>
+                $$P(D\\mid+)=\\frac{0.95\\cdot0.01}{0.059}
+                  =\\frac{0.0095}{0.059}\\approx0.1610.$$
+                Despite the positive test, the posterior is about $16\\%$ because the
+                prior is small.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>Softmax of three logits</h4>
+              <p>
+                For $\\mathbf{z}=(2,1,0)$:
+              </p>
+              <p>
+                $$e^2\\approx7.3891,\\quad e^1\\approx2.7183,\\quad e^0=1,$$
+                $$\\sum_j e^{z_j}\\approx11.1073,$$
+                $$\\mathbf{p}\\approx(0.6652,0.2447,0.0900).$$
+                The three probabilities sum to $1$, and the largest logit receives
+                the largest probability.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>Cross-entropy for a one-hot target</h4>
+              <p>
+                If the correct class is the first one, the target is
+                $\\mathbf{y}=(1,0,0)$. Then
+              </p>
+              <p>
+                $$H(\\mathbf{y},\\mathbf{p})
+                  =-1\\cdot\\log(0.6652)\\approx0.4076\\ \\text{nats}.$$
+                Since the true distribution is deterministic, its entropy is $0$,
+                so the KL divergence equals the cross-entropy.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">4</span>
+            <div>
+              <h4>Entropy, cross-entropy, and KL for general distributions</h4>
+              <p>
+                Let $p=(0.6,0.3,0.1)$ and $q=(0.7,0.2,0.1)$. Then
+              </p>
+              <p>
+                $$H(p)=-(0.6\\log0.6+0.3\\log0.3+0.1\\log0.1)
+                  \\approx0.8979,$$
+                $$H(p,q)=-(0.6\\log0.7+0.3\\log0.2+0.1\\log0.1)
+                  \\approx0.9271,$$
+                $$D_{KL}(p\\|q)=H(p,q)-H(p)\\approx0.9271-0.8979=0.0291.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> the evidence $0.059$ is the sum of the two
+            weighted likelihoods; the posterior $0.0095/0.059$ is about $0.1610$.
+            The softmax values sum to $1$ and are ordered like the logits. For the
+            one-hot target, KL equals cross-entropy because $H(p)=0$. For the general
+            distributions, $H(p,q)-H(p)=0.0291$ matches the direct KL sum, and the
+            non-negative result is consistent with Gibbs' inequality.
+          </div>
+        </div>
+      </section>
+
       <section class="chapter-section" id="labs">
-        <h2 class="section-title"><span class="section-index">7.4</span> Labs</h2>
+        <h2 class="section-title"><span class="section-index">7.5</span> Labs</h2>
         <div data-widget="softmax-lab"></div>
         <div data-widget="cross-entropy-lab"></div>
       </section>
 
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">7.5</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">7.6</span> Check your understanding</h2>
         <div data-widget="probability-quiz"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">7.6</span> Mastery checklist
+          <span class="section-index">7.7</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(7, [
           "State Bayes' rule and apply it to a small example.",
@@ -220,7 +321,7 @@
       </section>
 
       <section class="chapter-section">
-        <h2 class="section-title"><span class="section-index">7.7</span> Reading</h2>
+        <h2 class="section-title"><span class="section-index">7.8</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Deisenroth, Faisal & Ong, Mathematics for Machine Learning — Chapter 6", source: "Probability and distributions" },
           { title: "Stewart, Cálculo Vol. 1 — §8.5", source: "Probability as an application of integration; continuous distributions" },

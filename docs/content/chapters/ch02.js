@@ -24,6 +24,7 @@
           <a href="#functions">Functions</a>
           <a href="#limits">Limits and continuity</a>
           <a href="#derivative">The derivative</a>
+          <a href="#worked">Worked example</a>
           <a href="#labs">Labs</a>
           <a href="#check">Check your understanding</a>
         </nav>
@@ -221,18 +222,109 @@
         </div>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">2.4</span> Worked example: limits and the derivative</h2>
+        <div class="prose">
+          <p>
+            This example connects the three ideas of the chapter: a limit, a
+            removable discontinuity, and a derivative computed from the definition.
+            Work each line before reading the next.
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <h3>One function, three questions</h3>
+          <p class="example-intro">
+            Use $g(x)=x^2-3x+2$ for the derivative and
+            $r(x)=1/(x+1)$ for a rational derivative. The continuity example is
+            $f(x)=(x^2-1)/(x-1)$.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>A limit by factoring</h4>
+              <p>
+                $$\\lim_{x\\to3}\\frac{x^2-9}{x-3}
+                  =\\lim_{x\\to3}\\frac{(x-3)(x+3)}{x-3}
+                  =\\lim_{x\\to3}(x+3)=6.$$
+                The cancellation is valid because $x\\ne3$ inside the limit.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>A removable discontinuity</h4>
+              <p>
+                The function $f(x)=(x^2-1)/(x-1)$ is undefined at $x=1$, but
+              </p>
+              <p>
+                $$\\lim_{x\\to1}\\frac{(x-1)(x+1)}{x-1}
+                  =\\lim_{x\\to1}(x+1)=2.$$
+                If we define $f(1)=2$, the function becomes continuous at $1$. The
+                hole is removable; a jump discontinuity would not be.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>The derivative from the definition</h4>
+              <p>
+                For $g(x)=x^2-3x+2$ at $x=2$:
+              </p>
+              <p>
+                $$g(2)=4-6+2=0,$$
+                $$g(2+h)=(2+h)^2-3(2+h)+2=h^2+h,$$
+                $$\\frac{g(2+h)-g(2)}{h}=\\frac{h^2+h}{h}=h+1.$$
+                Taking $h\\to0$ gives $g'(2)=1$.
+              </p>
+              <p>
+                Check with the power rule: $g'(x)=2x-3$, so $g'(2)=1$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">4</span>
+            <div>
+              <h4>A rational derivative</h4>
+              <p>
+                Write $r(x)=(x+1)^{-1}$. The chain rule gives
+              </p>
+              <p>
+                $$r'(x)=-1(x+1)^{-2}\\cdot1=-\\frac{1}{(x+1)^2}.$$
+                At $x=1$, $r'(1)=-1/4$. The derivative is negative because the
+                function is decreasing on its domain.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> the limit at $3$ is $6$; the removable value at
+            $1$ is $2$; the difference quotient simplifies exactly to $h+1$, whose
+            limit is $1$; and the power rule gives the same derivative. For the
+            rational function, $(x+1)^{-1}$ has derivative
+            $-1\\cdot(x+1)^{-2}$, which is negative at $x=1$.
+          </div>
+        </div>
+      </section>
+
       <section class="chapter-section" id="labs">
-        <h2 class="section-title"><span class="section-index">2.4</span> Labs</h2>
+        <h2 class="section-title"><span class="section-index">2.5</span> Labs</h2>
         <div data-widget="function-explorer"></div>
         <div data-widget="secant-tangent"></div>
       </section>
 
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">2.5</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">2.6</span> Check your understanding</h2>
         <div data-widget="limits-quiz"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">2.6</span> Mastery checklist
+          <span class="section-index">2.7</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(2, [
           "State the limit definition of the derivative.",
@@ -244,7 +336,7 @@
       </section>
 
       <section class="chapter-section">
-        <h2 class="section-title"><span class="section-index">2.7</span> Reading</h2>
+        <h2 class="section-title"><span class="section-index">2.8</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Stewart, Cálculo Vol. 1 — Chapters 1 and 2", source: "§1.1–1.5 functions and models; §2.1–2.8 limits and derivatives" },
           { title: "Mathematics for Machine Learning — §5.1", source: "The machine-learning framing of derivatives" }

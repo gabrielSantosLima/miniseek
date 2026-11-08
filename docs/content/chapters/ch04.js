@@ -24,6 +24,7 @@
           <a href="#extrema">Extrema</a>
           <a href="#newton">Newton's method</a>
           <a href="#descent">Gradient descent</a>
+          <a href="#worked">Worked example</a>
           <a href="#lab">Lab</a>
           <a href="#check">Check your understanding</a>
         </nav>
@@ -195,17 +196,106 @@
         </div>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">4.4</span> Worked example: minimum, Newton, and descent</h2>
+        <div class="prose">
+          <p>
+            Use the same quadratic to see three perspectives on optimization: a
+            critical point and the second-derivative test, one Newton step, and a
+            sequence of gradient-descent steps.
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <h3>One quadratic, three calculations</h3>
+          <p class="example-intro">
+            Let $f(x)=x^2-4x+5$. Its derivatives are $f'(x)=2x-4$ and $f''(x)=2$.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>Critical point and classification</h4>
+              <p>
+                Set $f'(x)=0$: $2x-4=0$, so $x=2$. Since $f''(2)=2>0$, the
+                function is concave up and $x=2$ is a local minimum. The value is
+                $f(2)=4-8+5=1$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>One Newton step for the minimum</h4>
+              <p>
+                Apply Newton's method to $f'$:
+              </p>
+              <p>
+                $$x_{n+1}=x_n-\\frac{f'(x_n)}{f''(x_n)}
+                  =x_n-\\frac{2x_n-4}{2}=2.$$
+                Starting from $x_0=0$ gives $x_1=2$ immediately. This is exact
+                because the function is quadratic; for a general loss, Newton would
+                need several iterations and a positive second derivative.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>Gradient descent with a stable rate</h4>
+              <p>
+                With $\\eta=0.1$:
+              </p>
+              <p>
+                $$x_{k+1}=x_k-0.1(2x_k-4)=0.8x_k+0.4.$$
+                Starting at $x_0=0$:
+              </p>
+              <p>
+                $$x_1=0.4,\\quad x_2=0.72,\\quad x_3=0.976,\\quad
+                  x_4=1.1808,\\quad x_5=1.34464.$$
+                The iterates approach $2$, the minimizer.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">4</span>
+            <div>
+              <h4>Gradient descent with too large a rate</h4>
+              <p>
+                With $\\eta=1.2$:
+              </p>
+              <p>
+                $$x_{k+1}=x_k-1.2(2x_k-4)=-1.4x_k+4.8.$$
+                Starting at $0$ gives $4.8$, then $-1.92$, then $7.488$, then
+                $-5.6832$. The iterates grow in magnitude, so the method diverges.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> $f'(2)=0$ and $f''(2)=2>0$, so $x=2$ is a
+            minimum. The Newton update simplifies to the constant $2$ for this
+            quadratic. The stable descent has multiplier $0.8$, whose magnitude is
+            less than $1$; the unstable descent has multiplier $-1.4$, whose
+            magnitude is greater than $1$, which explains the divergence.
+          </div>
+        </div>
+      </section>
+
       <section class="chapter-section" id="lab">
-        <h2 class="section-title"><span class="section-index">4.4</span> Lab</h2>
+        <h2 class="section-title"><span class="section-index">4.5</span> Lab</h2>
         <div data-widget="gradient-descent"></div>
       </section>
 
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">4.5</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">4.6</span> Check your understanding</h2>
         <div data-widget="optimization-quiz"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">4.6</span> Mastery checklist
+          <span class="section-index">4.7</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(4, [
           "Find all critical points and classify them.",
@@ -217,7 +307,7 @@
       </section>
 
       <section class="chapter-section">
-        <h2 class="section-title"><span class="section-index">4.7</span> Reading</h2>
+        <h2 class="section-title"><span class="section-index">4.8</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Stewart, Cálculo Vol. 1 — Chapter 4", source: "§4.1–4.4 extrema and derivative tests; §4.7–4.8 optimization and Newton's method" },
           { title: "Goodfellow, Bengio & Courville, Deep Learning — §4.3", source: "The loss-surface perspective on optimization" }

@@ -24,6 +24,7 @@
           <a href="#vectors">Vectors and matrices</a>
           <a href="#products">Matrix products</a>
           <a href="#structure">Rank, eigen, SVD</a>
+          <a href="#worked">Worked example</a>
           <a href="#lab">Lab</a>
           <a href="#check">Check your understanding</a>
         </nav>
@@ -196,17 +197,131 @@
         </div>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">6.4</span> Worked example: products, determinant, and eigen</h2>
+        <div class="prose">
+          <p>
+            This example uses a symmetric $2\\times2$ matrix so that every operation
+            can be checked by hand. Write each intermediate matrix before moving to
+            the next step.
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <h3>One matrix, five calculations</h3>
+          <p class="example-intro">
+            Let $A=\\begin{bmatrix}2&1\\\\1&2\\end{bmatrix}$,
+            $B=\\begin{bmatrix}1&0\\\\2&1\\end{bmatrix}$, and
+            $\\mathbf{x}=(1,2)$.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>Matrix–vector product</h4>
+              <p>
+                $$A\\mathbf{x}
+                  =\\begin{bmatrix}2&1\\\\1&2\\end{bmatrix}
+                   \\begin{bmatrix}1\\\\2\\end{bmatrix}
+                  =\\begin{bmatrix}2\\cdot1+1\\cdot2\\\\
+                    1\\cdot1+2\\cdot2\\end{bmatrix}
+                  =\\begin{bmatrix}4\\\\5\\end{bmatrix}.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>Two matrix products, in both orders</h4>
+              <p>
+                $$AB=
+                  \\begin{bmatrix}2&1\\\\1&2\\end{bmatrix}
+                  \\begin{bmatrix}1&0\\\\2&1\\end{bmatrix}
+                  =\\begin{bmatrix}4&1\\\\5&2\\end{bmatrix},$$
+                $$BA=
+                  \\begin{bmatrix}1&0\\\\2&1\\end{bmatrix}
+                  \\begin{bmatrix}2&1\\\\1&2\\end{bmatrix}
+                  =\\begin{bmatrix}2&1\\\\5&4\\end{bmatrix}.$$
+                Since $AB\\ne BA$, matrix multiplication is not commutative.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>Determinant and inverse</h4>
+              <p>
+                $$\\det A=2\\cdot2-1\\cdot1=3.$$
+                For a $2\\times2$ matrix
+                $\\begin{bmatrix}a&b\\\\c&d\\end{bmatrix}$, the inverse is
+                $\\frac{1}{ad-bc}\\begin{bmatrix}d&-b\\\\-c&a\\end{bmatrix}$, so
+              </p>
+              <p>
+                $$A^{-1}=\\frac13\\begin{bmatrix}2&-1\\\\-1&2\\end{bmatrix}.$$
+                Check: $A A^{-1}=I$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">4</span>
+            <div>
+              <h4>Eigenvalues</h4>
+              <p>
+                For a $2\\times2$ matrix, the characteristic polynomial is
+                $\\lambda^2-(\\operatorname{tr}A)\\lambda+\\det A=0$. Here
+                $\\operatorname{tr}A=4$ and $\\det A=3$, so
+              </p>
+              <p>
+                $$\\lambda^2-4\\lambda+3=(\\lambda-3)(\\lambda-1)=0,$$
+                giving $\\lambda_1=3$ and $\\lambda_2=1$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">5</span>
+            <div>
+              <h4>Eigenvectors</h4>
+              <p>
+                For $\\lambda=3$, solve $(A-3I)\\mathbf{v}=0$:
+                $\\begin{bmatrix}-1&1\\\\1&-1\\end{bmatrix}\\mathbf{v}=0$,
+                so $\\mathbf{v}_1=(1,1)$.
+                For $\\lambda=1$, $(A-I)\\mathbf{v}=0$ gives
+                $\\mathbf{v}_2=(1,-1)$.
+              </p>
+              <p>
+                Check: $A(1,1)=(3,3)=3(1,1)$ and
+                $A(1,-1)=(1,-1)=1(1,-1)$.
+                Because $A$ is symmetric positive definite, its singular values are
+                $3$ and $1$, and the eigenvectors are also the singular directions.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> $A\\mathbf{x}=(4,5)$; the two products differ,
+            so $AB\\ne BA$; $\\det A=3$ and $A^{-1}$ has the expected factor
+            $1/3$; the eigenvalues satisfy both trace $4$ and determinant $3$; and
+            substituting each eigenvector back into $A\\mathbf{v}=\\lambda\\mathbf{v}$
+            reproduces the eigenvalue. All five checks agree.
+          </div>
+        </div>
+      </section>
+
       <section class="chapter-section" id="lab">
-        <h2 class="section-title"><span class="section-index">6.4</span> Lab</h2>
+        <h2 class="section-title"><span class="section-index">6.5</span> Lab</h2>
         <div data-widget="matrix-lab"></div>
       </section>
 
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">6.5</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">6.6</span> Check your understanding</h2>
         <div data-widget="linear-algebra-quiz"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">6.6</span> Mastery checklist
+          <span class="section-index">6.7</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(6, [
           "Multiply matrices by hand and explain the row/column interpretation.",
@@ -219,7 +334,7 @@
       </section>
 
       <section class="chapter-section">
-        <h2 class="section-title"><span class="section-index">6.7</span> Reading</h2>
+        <h2 class="section-title"><span class="section-index">6.8</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Deisenroth, Faisal & Ong, Mathematics for Machine Learning — Chapters 2–4", source: "Linear algebra, analytic geometry, matrix decompositions" },
           { title: "Stewart, Cálculo Vol. 2 — Chapter 12", source: "Vectors, dot products, and the geometry of space" },

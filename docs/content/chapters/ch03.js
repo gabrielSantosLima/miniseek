@@ -17,7 +17,7 @@
         </p>
         <div class="chapter-meta">
           <span class="meta-pill">12 hours</span>
-          <span class="meta-pill">Stewart §3.1–3.6, §3.8–3.9</span>
+          <span class="meta-pill">Stewart Vol. 1 §3.1–3.6, §3.8–3.9</span>
           <span class="meta-pill">2 interactive labs</span>
         </div>
         <nav class="chapter-toc" aria-label="In this chapter">
@@ -41,11 +41,30 @@
               (fg)'=f'g+fg',\\qquad
               \\left(\\frac{f}{g}\\right)'=\\frac{f'g-fg'}{g^2}$$
           </div>
+          ${MS.ui.symbols([
+            ["$n$", "A constant exponent. The power rule also holds for real $n$ wherever $x^n$ is defined."],
+            ["$f,g$", "Differentiable functions of the same variable. Each prime denotes a derivative with respect to that variable."],
+            ["$(fg)'$", "The derivative of the product: differentiate the first factor, keep the second, then add the reverse."],
+            ["$f'g-fg'$", "The numerator of the quotient rule; the order matters, so it is not symmetric."],
+            ["$g^2$", "The denominator of the quotient rule. The rule requires $g\\ne0$."]
+          ])}
           <div class="formula">
             $$\\frac{d}{dx}e^x=e^x,\\qquad
               \\frac{d}{dx}\\ln x=\\frac{1}{x},\\qquad
               \\frac{d}{dx}\\sin x=\\cos x$$
           </div>
+          ${MS.ui.symbols([
+            ["$e$", "Euler's number, approximately $2.71828$. The exponential $e^x$ is its own derivative."],
+            ["$\\ln x$", "The natural logarithm, defined for $x>0$; it is the inverse of $e^x$."],
+            ["$\\sin x,\\cos x$", "Trigonometric functions measured in radians. Their derivatives cycle with period four."]
+          ])}
+          <p>
+            Differentiation is linear: the derivative of a sum is the sum of the
+            derivatives, and constant multiples pass through. This is why gradients
+            of large sums can be computed term by term and accumulated. The
+            product, quotient, and chain rules turn composite expressions into
+            products of simpler local derivatives.
+          </p>
           <p>
             The product rule and quotient rule are useful, but the rule that powers
             neural networks is the chain rule. Backpropagation is not a different
@@ -76,15 +95,30 @@
           <div class="formula">
             $$\\frac{dy}{dx}=\\frac{dy}{du}\\cdot\\frac{du}{dx}$$
           </div>
+          ${MS.ui.symbols([
+            ["$y=f(u)$", "The outer output, expressed as a function of the intermediate variable $u$."],
+            ["$u=g(x)$", "The inner function: the intermediate quantity produced from $x$."],
+            ["$\\frac{dy}{du}$", "The derivative of the outer function with respect to the intermediate variable."],
+            ["$\\frac{du}{dx}$", "The derivative of the inner function with respect to the input."],
+            ["$\\frac{dy}{dx}$", "The total derivative of the composition with respect to $x$."]
+          ])}
           <p>
             In function notation:
           </p>
           <div class="formula">
             $$\\frac{d}{dx}f(g(x))=f'(g(x))\\,g'(x)$$
           </div>
+          ${MS.ui.symbols([
+            ["$f'(g(x))$", "The outer derivative evaluated at the inner function — not at $x$."],
+            ["$g'(x)$", "The inner derivative: how fast the intermediate quantity changes."],
+            ["$f(g(x))$", "The composition: apply $g$ first, then $f$."]
+          ])}
           <p>
             The outer derivative is evaluated at the inner function, not at $x$.
-            This point is the source of many backpropagation bugs.
+            This point is the source of many backpropagation bugs. A useful mental
+            model is a chain of gears: a small turn of $x$ turns $u$ by $g'(x)$,
+            and each unit of $u$ turns $y$ by $f'(u)$. The two gear ratios
+            multiply.
           </p>
           <p>
             For a deeper composition $f(g(h(x)))$, the same idea repeats:
@@ -93,10 +127,18 @@
             $$\\frac{d}{dx}f(g(h(x)))
               =f'(g(h(x)))\\,g'(h(x))\\,h'(x)$$
           </div>
+          ${MS.ui.symbols([
+            ["$h'(x)$", "The innermost derivative."],
+            ["$g'(h(x))$", "The middle derivative evaluated at $h(x)$."],
+            ["$f'(g(h(x)))$", "The outermost derivative evaluated at $g(h(x))$."]
+          ])}
           <p>
             Reverse-mode automatic differentiation computes exactly these products
             from the outside in, caching intermediate values so that no factor is
-            recomputed.
+            recomputed. The forward pass records the values; the reverse pass
+            multiplies local derivatives. This is why backpropagation scales to
+            millions of parameters: each parameter gradient is assembled from
+            factors that are already available.
           </p>
         </div>
       </section>
@@ -113,6 +155,15 @@
             $$\\tanh'(z)=1-\\tanh^2(z)$$
             $$\\operatorname{ReLU}'(z)=\\begin{cases}1,&z>0\\\\0,&z<0\\end{cases}$$
           </div>
+          ${MS.ui.symbols([
+            ["$z$", "The pre-activation: the affine score before the nonlinearity."],
+            ["$\\sigma(z)$", "The logistic sigmoid. Its output lies in $(0,1)$, so it can be read as a probability."],
+            ["$\\sigma(z)(1-\\sigma(z))$", "The sigmoid derivative. It is largest at $z=0$ (value $1/4$) and tends to zero at both extremes."],
+            ["$\\tanh(z)$", "The hyperbolic tangent, with output in $(-1,1)$ and zero at the origin."],
+            ["$1-\\tanh^2(z)$", "The tanh derivative; it also saturates at both extremes."],
+            ["$\\operatorname{ReLU}(z)$", "The rectified linear unit $\\max(0,z)$."],
+            ["$z>0,\\ z<0$", "The two linear pieces of ReLU. At $z=0$ the derivative is undefined; implementations choose a convention."]
+          ])}
           <p>
             The sigmoid and tanh derivatives approach zero when their inputs are
             large in magnitude. That saturation is the first explanation of the
@@ -120,7 +171,17 @@
           </p>
           <p>
             ReLU avoids saturation for positive inputs, but its gradient is zero for
-            all negative inputs, which can produce “dead” units.
+            all negative inputs, which can produce “dead” units. Smooth variants
+            such as GELU and Swish interpolate between these behaviours: they are
+            differentiable everywhere and do not have a hard zero region, at the
+            cost of a slightly more expensive derivative.
+          </p>
+          <p>
+            When an activation appears in a network, its derivative is multiplied
+            into the backward pass. If that factor is repeatedly small, the signal
+            decays as it travels toward earlier layers; if it is repeatedly large,
+            the signal explodes. Activation choice is therefore not cosmetic — it
+            changes the conditioning of the entire optimization problem.
           </p>
         </div>
       </section>
@@ -150,7 +211,7 @@
       <section class="chapter-section">
         <h2 class="section-title"><span class="section-index">3.7</span> Reading</h2>
         ${MS.ui.readingList([
-          { title: "Stewart, Calculus — Chapter 3", source: "§3.1–3.6 differentiation rules; §3.8–3.9 exponential, logarithmic, and related rates" },
+          { title: "Stewart, Cálculo Vol. 1 — Chapter 3", source: "§3.1–3.6 differentiation rules; §3.8–3.9 exponential, logarithmic, and related rates" },
           { title: "Parr & Howard, The Matrix Calculus You Need For Deep Learning — §2–3", source: "Read after the scalar chain rule is solid" }
         ])}
       </section>

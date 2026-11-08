@@ -1499,18 +1499,21 @@ $$
 
 ## Appendix B — Stewart Calculus Map
 
-| Stewart chapter | Topic | Used in |
-|---|---|---|
-| Ch. 1 | Functions and models | Ch. 2 |
-| Ch. 2 | Limits and derivatives | Ch. 2 |
-| Ch. 3 | Differentiation rules | Ch. 3 |
-| Ch. 4 | Applications of differentiation | Ch. 4 |
-| Ch. 11 | Infinite sequences and series (optional) | Ch. 7, scaling intuition |
-| Ch. 14 | Partial derivatives | Ch. 5, 8, 9 |
-| Ch. 15 | Multiple integrals (optional) | probability intuition |
+| Volume | Stewart chapter | Topic | Used in |
+|---|---|---|---|
+| Vol. 1 | Ch. 1 | Functions and models | Ch. 2 |
+| Vol. 1 | Ch. 2 | Limits and derivatives | Ch. 2 |
+| Vol. 1 | Ch. 3 | Differentiation rules | Ch. 3 |
+| Vol. 1 | Ch. 4 | Applications of differentiation | Ch. 4 |
+| Vol. 2 | Ch. 11 | Infinite sequences and series (optional) | Ch. 7, scaling intuition |
+| Vol. 2 | Ch. 12 | Vectors and the geometry of space | Ch. 6 |
+| Vol. 2 | Ch. 14 | Partial derivatives | Ch. 5, 8, 9 |
+| Vol. 2 | Ch. 15 | Multiple integrals (optional) | probability intuition |
 
-The learner should use the 8th or 9th edition. Section numbering is stable across
-recent editions; if a section is missing, use the index to locate the same topic.
+The learner's local study copies are *Cálculo, Volume 1* and *Cálculo, Volume 2*
+(Stewart, 7th Brazilian edition), kept outside this repository. Section numbering
+is stable across recent editions; if a section is missing, use the index to
+locate the same topic.
 
 ---
 

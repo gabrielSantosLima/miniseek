@@ -73,12 +73,27 @@
     );
   }
 
+  function symbols(rows) {
+    return (
+      '<dl class="symbol-table">' +
+      rows
+        .map(function (row) {
+          return (
+            '<div class="symbol-row"><dt>' + row[0] + "</dt><dd>" + row[1] + "</dd></div>"
+          );
+        })
+        .join("") +
+      "</dl>"
+    );
+  }
+
   MS.ui = {
     escapeHtml: escapeHtml,
     checklist: checklist,
     bindChecklist: bindChecklist,
     completionCard: completionCard,
-    readingList: readingList
+    readingList: readingList,
+    symbols: symbols
   };
 
   const cleanups = [];

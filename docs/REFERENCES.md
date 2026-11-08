@@ -67,6 +67,14 @@ institutional access). They are central to the plan and should not be skipped.
 |---|---|---|
 | Stewart, J. *Calculus: Early Transcendentals*, 8th or 9th ed., Cengage. | Primary calculus reference for Chapters 2–5. | https://www.cengage.com/c/calculus-early-transcendentals-8e-stewart/ |
 | Stewart, J. *Calculus*, 9th ed., Cengage. | Alternative edition; section numbering is close. | https://www.cengage.com/c/calculus-9e-stewart/ |
+
+> **Local study copies (not in this repository):** the learner keeps
+> *Cálculo, Volume 1* and *Cálculo, Volume 2* (Stewart, 7th Brazilian edition)
+> in the local `Downloads` folder. They are intentionally excluded from Git.
+> Volume 1 covers Chapters 1–8 (functions, limits, derivatives, applications,
+> integrals); Volume 2 covers Chapters 9–17 (sequences and series, vectors,
+> partial derivatives, multiple integrals). The guide cites the corresponding
+> sections in its reading lists.
 | Strang, G. *Introduction to Linear Algebra*, 6th ed., Wellesley–Cambridge. | Companion for Chapter 6. | https://math.mit.edu/~gs/linearalgebra/ |
 | Strang, G. MIT 18.06 *Linear Algebra* lectures. | Free video lectures and exercises for Chapter 6. | https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/ |
 | Nielsen, M. *Neural Networks and Deep Learning*. | Alternative, very clear treatment of backpropagation and cross-entropy. | http://neuralnetworksanddeeplearning.com/ |

@@ -43,14 +43,28 @@
               \\mathbf{z}_2=W_2\\mathbf{a}_1+\\mathbf{b}_2,\\quad
               L=\\ell(\\mathbf{z}_2,\\mathbf{y})$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\mathbf{x}$", "The input vector."],
+            ["$W_1,\\mathbf{b}_1$", "Parameters of the first dense layer."],
+            ["$\\mathbf{z}_1$", "The first pre-activation."],
+            ["$\\mathbf{a}_1$", "The first activation, which becomes the input to the next layer."],
+            ["$W_2,\\mathbf{b}_2$", "Parameters of the output layer."],
+            ["$\\mathbf{z}_2$", "The output logits."],
+            ["$\\ell$", "The loss function comparing logits to the target $\\mathbf{y}$."],
+            ["$L$", "The final scalar loss."]
+          ])}
           <p>
             The forward pass computes every intermediate value and caches it. The
             backward pass needs those cached values to evaluate local derivatives.
+            The graph must be traversed in reverse topological order: a node can be
+            differentiated only after all nodes that depend on it have contributed
+            their gradients.
           </p>
           <p>
             For a scalar node $u=f(v)$, the local derivative is $\\partial u/\\partial v$.
             The chain rule multiplies local derivatives along every path from the
-            loss to a parameter.
+            loss to a parameter. If a value has several consumers, the contributions
+            add; this is exactly why shared parameters accumulate gradients.
           </p>
         </div>
       </section>
@@ -67,10 +81,17 @@
             $$\\bar{v}=\\sum_{u\\in\\text{children}(v)}
               \\bar{u}\\,\\frac{\\partial u}{\\partial v}$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\bar{v}$", "The accumulated gradient $\\partial L/\\partial v$ at node $v$."],
+            ["$\\text{children}(v)$", "All nodes that directly consume the value produced by $v$."],
+            ["$\\bar{u}$", "The upstream gradient at a child node."],
+            ["$\\partial u/\\partial v$", "The local derivative of the child with respect to $v$."]
+          ])}
           <p>
             If a value is used by several nodes, its gradient contributions
             accumulate. This is why parameter sharing works naturally in the same
-            framework.
+            framework. It is also why a single backward pass can compute gradients
+            for every parameter, regardless of how many times a parameter is reused.
           </p>
           <p>
             For a dense layer $\\mathbf{z}=W\\mathbf{a}+\\mathbf{b}$ with upstream
@@ -81,9 +102,18 @@
               \\frac{\\partial L}{\\partial\\mathbf{b}}=\\delta,\\qquad
               \\frac{\\partial L}{\\partial\\mathbf{a}}=W^T\\delta$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\delta$", "The upstream gradient with respect to the layer output."],
+            ["$\\delta\\mathbf{a}^T$", "The outer product that gives the gradient with respect to $W$; it has the same shape as $W$."],
+            ["$W^T\\delta$", "The gradient with respect to the input; it maps the output-space gradient back to input space."],
+            ["$\\mathbf{a}$", "The input to the layer (the previous activation)."]
+          ])}
           <p>
             For a layer followed by an activation,
             $\\delta_{\\text{prev}}=(W^T\\delta)\\odot\\phi'(\\mathbf{z})$.
+            The Hadamard product $\\odot$ applies the activation derivative
+            element-wise. If the activation derivative is tiny, the signal shrinks;
+            if it is large, the signal grows. Deep chains multiply many such factors.
           </p>
           <p>
             The reverse pass costs roughly one forward pass plus one backward pass,
@@ -105,9 +135,20 @@
               L=-\\log\\hat y_c,\\qquad
               \\frac{\\partial L}{\\partial\\mathbf{z}}=\\hat{\\mathbf{y}}-\\mathbf{y}$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\mathbf{z}$", "The logits produced by the final linear layer."],
+            ["$\\hat{\\mathbf{y}}$", "The predicted probability distribution over the vocabulary."],
+            ["$c$", "The index of the correct next token."],
+            ["$\\hat y_c$", "The probability the model assigned to the correct token."],
+            ["$L$", "The negative log-likelihood for this position."],
+            ["$\\mathbf{y}$", "The one-hot target vector with a $1$ at index $c$."],
+            ["$\\hat{\\mathbf{y}}-\\mathbf{y}$", "The error signal: predicted probability minus target probability."]
+          ])}
           <p>
             This is the gradient that flows into the final linear layer of a language
             model. The target $\\mathbf{y}$ is one-hot for the correct next token.
+            The simplicity of $\\hat{\\mathbf{y}}-\\mathbf{y}$ is not an accident:
+            the softmax and the logarithm cancel in the derivative.
           </p>
           <p>
             To debug a backward pass, compare it with a central finite difference:
@@ -116,6 +157,12 @@
             $$\\frac{\\partial L}{\\partial\\theta}
               \\approx\\frac{L(\\theta+h)-L(\\theta-h)}{2h}$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\theta$", "A single scalar parameter (perturb one entry at a time)."],
+            ["$h$", "A small step size; typical values are $10^{-4}$ to $10^{-6}$."],
+            ["$L(\\theta+h)$", "The loss after increasing the parameter."],
+            ["$L(\\theta-h)$", "The loss after decreasing the parameter."]
+          ])}
           <p>
             Use a moderate $h$ (for example $10^{-4}$ to $10^{-6}$). Too large and the
             approximation is biased; too small and floating-point cancellation

@@ -40,6 +40,11 @@
           <div class="formula">
             $$p(x)\\ge 0,\\qquad\\sum_x p(x)=1$$
           </div>
+          ${MS.ui.symbols([
+            ["$p(x)$", "The probability mass assigned to outcome $x$."],
+            ["$p(x)\\ge0$", "Probabilities cannot be negative."],
+            ["$\\sum_x p(x)=1$", "The total probability over all outcomes is exactly one."]
+          ])}
           <p>
             A language model defines a categorical distribution over the vocabulary
             at every position. The softmax is the standard way to parameterize that
@@ -48,10 +53,25 @@
           <div class="formula">
             $$p_i=\\frac{e^{z_i}}{\\sum_j e^{z_j}}$$
           </div>
+          ${MS.ui.symbols([
+            ["$z_i$", "The logit for vocabulary item $i$; an unconstrained real number."],
+            ["$e^{z_i}$", "The exponentiated logit, which is always positive."],
+            ["$\\sum_j e^{z_j}$", "The normalizer over all $V$ vocabulary items."],
+            ["$p_i$", "The resulting probability for item $i$; all $p_i$ sum to one."]
+          ])}
+          <p>
+            The exponential makes the transformation positive and order-preserving:
+            a larger logit always produces a larger probability. The normalizer is
+            what makes the outputs a distribution. In practice, implementations
+            subtract the maximum logit before exponentiating to avoid overflow; the
+            result is mathematically identical.
+          </p>
           <p>
             The categorical distribution generalizes the Bernoulli distribution from
             two outcomes to $V$ outcomes. Sampling from it means drawing one token
-            according to its probability.
+            according to its probability. Temperature divides the logits before the
+            softmax: low temperature sharpens the distribution, high temperature
+            flattens it.
           </p>
         </div>
       </section>
@@ -65,22 +85,46 @@
           <div class="formula">
             $$P(A\\mid B)=\\frac{P(B\\mid A)P(A)}{P(B)}$$
           </div>
+          ${MS.ui.symbols([
+            ["$P(A\\mid B)$", "The posterior: the probability of $A$ after observing $B$."],
+            ["$P(B\\mid A)$", "The likelihood: how probable the observation is if $A$ is true."],
+            ["$P(A)$", "The prior: the probability of $A$ before observing $B$."],
+            ["$P(B)$", "The evidence or marginal probability of the observation."]
+          ])}
+          <p>
+            Bayes' rule is a way to reverse a conditional probability. It is the
+            foundation of Bayesian updating: start with a prior, observe evidence,
+            and obtain a posterior. In machine learning it also explains why a
+            model's predictions depend on both the data and the prior assumptions
+            encoded by its architecture and regularization.
+          </p>
           <p>
             The expectation of a function is its probability-weighted average:
           </p>
           <div class="formula">
             $$\\mathbb{E}_{x\\sim p}[f(x)]=\\sum_x p(x)f(x)$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\mathbb{E}_{x\\sim p}$", "Expectation under the distribution $p$."],
+            ["$f(x)$", "Any function of the random outcome, such as a loss or a reward."],
+            ["$p(x)$", "The probability weight assigned to outcome $x$."],
+            ["$\\sum_x$", "The weighted sum over all possible outcomes."]
+          ])}
           <p>
             Variance measures spread:
             $\\operatorname{Var}(X)=\\mathbb{E}[(X-\\mathbb{E}[X])^2]$. In training,
             variance across examples and gradients is a major source of noise.
+            Bias and variance together determine the expected squared error of an
+            estimator. The bias–variance decomposition is the statistical version of
+            the underfitting/overfitting trade-off you will meet in Chapter 10.
           </p>
           <p>
             Maximum likelihood estimation chooses parameters that make the observed
             data most probable. For a categorical model, the MLE is the empirical
             frequency of each outcome. In language modeling, the data are token
-            sequences and the likelihood factorizes autoregressively.
+            sequences and the likelihood factorizes autoregressively. Maximizing the
+            likelihood is equivalent to minimizing the negative log-likelihood,
+            which becomes cross-entropy.
           </p>
         </div>
       </section>
@@ -94,12 +138,30 @@
           <div class="formula">
             $$H(p)=-\\sum_x p(x)\\log p(x)$$
           </div>
+          ${MS.ui.symbols([
+            ["$H(p)$", "The entropy of distribution $p$, measured in nats when the logarithm is natural."],
+            ["$p(x)$", "The probability of outcome $x$."],
+            ["$\\log$", "The natural logarithm in information theory; using base 2 would measure bits instead of nats."]
+          ])}
           <p>
-            Cross-entropy measures the cost of using $q$ when the truth is $p$:
+            Entropy is maximized by a uniform distribution and is zero for a
+            deterministic one. It measures uncertainty, not the number of possible
+            outcomes by itself: a distribution concentrated on one outcome has low
+            entropy even if the vocabulary is huge.
           </p>
           <div class="formula">
             $$H(p,q)=-\\sum_x p(x)\\log q(x)$$
           </div>
+          ${MS.ui.symbols([
+            ["$H(p,q)$", "The cross-entropy: the average surprise of using model $q$ when the truth is $p$."],
+            ["$p(x)$", "The true probability of outcome $x$."],
+            ["$q(x)$", "The model's predicted probability of outcome $x$."]
+          ])}
+          <p>
+            Cross-entropy is not symmetric: $H(p,q)\\ne H(q,p)$ in general. It
+            penalizes the model heavily when it assigns a tiny probability to an
+            outcome that actually occurs, because $-\\log q(x)$ becomes large.
+          </p>
           <p>
             KL divergence measures the extra cost:
           </p>
@@ -107,10 +169,18 @@
             $$D_{KL}(p\\|q)=\\sum_x p(x)\\log\\frac{p(x)}{q(x)}
               =H(p,q)-H(p)$$
           </div>
+          ${MS.ui.symbols([
+            ["$D_{KL}(p\\|q)$", "The Kullback–Leibler divergence from $p$ to $q$; a non-negative measure of mismatch."],
+            ["$\\log\\frac{p(x)}{q(x)}$", "The log-ratio of true to predicted probability for outcome $x$."],
+            ["$H(p,q)-H(p)$", "The extra cost of using $q$ instead of the true distribution $p$."]
+          ])}
           <p>
             Since $H(p)$ does not depend on the model, minimizing cross-entropy is
             equivalent to minimizing KL divergence. This is why next-token language
-            modeling uses cross-entropy loss over the vocabulary.
+            modeling uses cross-entropy loss over the vocabulary. KL divergence is
+            not a true distance because it is not symmetric and does not satisfy the
+            triangle inequality, but it is non-negative and zero exactly when
+            $p=q$ almost everywhere.
           </p>
           <div class="callout key">
             <div class="callout-icon" aria-hidden="true">◆</div>
@@ -118,7 +188,7 @@
               <p class="callout-title">The training objective</p>
               <p>
                 For a sequence $x_1,\\ldots,x_T$, the loss is
-                $-\\sum_t\\log p_\\theta(x_t\\mid x_{<t})$. In practice it is averaged
+                $-\\sum_t\\log p_\\theta(x_t\\mid x_{&lt;t})$. In practice it is averaged
                 over tokens and batches.
               </p>
             </div>
@@ -153,6 +223,7 @@
         <h2 class="section-title"><span class="section-index">7.7</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Deisenroth, Faisal & Ong, Mathematics for Machine Learning — Chapter 6", source: "Probability and distributions" },
+          { title: "Stewart, Cálculo Vol. 1 — §8.5", source: "Probability as an application of integration; continuous distributions" },
           { title: "Goodfellow, Bengio & Courville, Deep Learning — Chapter 3", source: "Probability and information theory" },
           { title: "Nielsen, Neural Networks and Deep Learning — Chapter 3", source: "Optional: cross-entropy from a different angle" }
         ])}

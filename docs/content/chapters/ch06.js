@@ -17,7 +17,7 @@
         </p>
         <div class="chapter-meta">
           <span class="meta-pill">16 hours</span>
-          <span class="meta-pill">MML Ch. 2–4</span>
+          <span class="meta-pill">MML Ch. 2–4 + Stewart Vol. 2 Ch. 12</span>
           <span class="meta-pill">1 interactive lab</span>
         </div>
         <nav class="chapter-toc" aria-label="In this chapter">
@@ -43,22 +43,47 @@
               \\mathbf{x}\\in\\mathbb{R}^{n},\\quad
               \\mathbf{y}\\in\\mathbb{R}^{m}$$
           </div>
+          ${MS.ui.symbols([
+            ["$W$", "An $m\\times n$ matrix representing a linear map from $n$ dimensions to $m$ dimensions."],
+            ["$\\mathbf{x}$", "The input vector with $n$ components."],
+            ["$\\mathbf{y}$", "The output vector with $m$ components."],
+            ["$\\mathbb{R}^{m\\times n}$", "The set of real matrices with $m$ rows and $n$ columns."]
+          ])}
+          <p>
+            A linear map satisfies two properties: $W(\\mathbf{x}+\\mathbf{z})=W\\mathbf{x}+W\\mathbf{z}$
+            and $W(c\\mathbf{x})=cW\\mathbf{x}$. It preserves the origin and sends
+            straight lines to straight lines. An affine map adds a bias and is
+            therefore not linear in the strict sense, but it is the basic building
+            block of a neural layer.
+          </p>
           <p>
             The dot product measures alignment:
             $\\mathbf{x}\\cdot\\mathbf{y}=\\sum_i x_i y_i
               =\\lVert\\mathbf{x}\\rVert\\lVert\\mathbf{y}\\rVert\\cos\\theta$.
-            It is zero for orthogonal vectors.
+            It is zero for orthogonal vectors. In geometric terms, the dot product
+            is the length of the projection of one vector onto the other, multiplied
+            by the other length.
           </p>
+          ${MS.ui.symbols([
+            ["$\\mathbf{x}\\cdot\\mathbf{y}$", "The scalar dot product of two vectors of the same dimension."],
+            ["$\\lVert\\mathbf{x}\\rVert$", "The Euclidean length of $\\mathbf{x}$."],
+            ["$\\theta$", "The angle between the two vectors."],
+            ["$\\cos\\theta$", "Positive for acute angles, zero for orthogonal vectors, negative for obtuse angles."]
+          ])}
           <p>
             Norms measure size. The $L_2$ norm is
             $\\lVert\\mathbf{x}\\rVert_2=\\sqrt{\\sum_i x_i^2}$; the $L_1$ norm is the
-            sum of absolute values. Regularization often penalizes a norm.
+            sum of absolute values. Regularization often penalizes a norm. The $L_2$
+            penalty shrinks parameters smoothly, while the $L_1$ penalty encourages
+            exact zeros and therefore sparsity.
           </p>
           <p>
             A matrix can be read in two equivalent ways: as a collection of columns,
             or as a collection of rows. Matrix multiplication combines both views:
             each output entry is a dot product of a row of the left matrix with a
-            column of the right matrix.
+            column of the right matrix. The column view is often more useful for
+            understanding transformations; the row view is more useful for
+            computing.
           </p>
         </div>
       </section>
@@ -73,20 +98,32 @@
           <div class="formula">
             $$(m\\times k)(k\\times n)\\longrightarrow(m\\times n)$$
           </div>
+          ${MS.ui.symbols([
+            ["$m$", "Rows of the left matrix and rows of the result."],
+            ["$k$", "Shared inner dimension: columns of the left matrix and rows of the right matrix."],
+            ["$n$", "Columns of the right matrix and columns of the result."],
+            ["$\\longrightarrow$", "Shape compatibility: the inner dimensions must match exactly."]
+          ])}
           <p>
             Matrix multiplication is associative but not commutative:
-            $AB\\ne BA$ in general. This is one reason layer order matters.
+            $AB\\ne BA$ in general. This is one reason layer order matters. It is
+            also why a linear layer and its transpose have different shapes and
+            different meanings: one maps forward, the other maps gradients
+            backward.
           </p>
           <p>
             The transpose swaps rows and columns: $(AB)^T=B^TA^T$. In
             backpropagation, transposes are everywhere because a VJP multiplies by
-            the Jacobian transpose.
+            the Jacobian transpose. A useful shape rule is that the transpose of an
+            $m\\times n$ matrix is $n\\times m$, so the product $W^T\\delta$ is
+            dimensionally valid whenever $W$ maps the input to the output.
           </p>
           <p>
             An affine layer adds a bias after the matrix product:
             $\\mathbf{y}=W\\mathbf{x}+\\mathbf{b}$. The bias shifts the entire
             hyperplane and is essential: without it, every layer would map the origin
-            to the origin.
+            to the origin. The bias also gives the model the ability to represent
+            functions whose decision boundary does not pass through zero.
           </p>
           <div class="callout key">
             <div class="callout-icon" aria-hidden="true">◆</div>
@@ -118,9 +155,22 @@
             $$A\\mathbf{v}=\\lambda\\mathbf{v}$$
             <div class="formula-caption">The matrix only scales the eigenvector; it does not rotate it.</div>
           </div>
+          ${MS.ui.symbols([
+            ["$A$", "A square matrix representing a linear transformation."],
+            ["$\\mathbf{v}$", "A non-zero eigenvector: a direction that the matrix does not rotate."],
+            ["$\\lambda$", "The eigenvalue: the factor by which the eigenvector is scaled. It can be negative or complex."]
+          ])}
           <p>
             Eigenvalues reveal stability and curvature. A positive-definite matrix
-            has all positive eigenvalues; it curves upward in every direction.
+            has all positive eigenvalues; it curves upward in every direction. A
+            negative-definite matrix curves downward everywhere. An indefinite
+            matrix has eigenvalues of both signs and produces a saddle. This is the
+            linear-algebraic version of the second-derivative test.
+          </p>
+          <p>
+            A matrix with a zero eigenvalue is singular: some non-zero direction is
+            mapped to zero, so information is lost and the matrix has no inverse.
+            This is the same phenomenon as a zero determinant.
           </p>
           <p>
             The singular value decomposition writes any matrix as:
@@ -128,12 +178,20 @@
           <div class="formula">
             $$A=U\\Sigma V^T$$
           </div>
+          ${MS.ui.symbols([
+            ["$A$", "Any real $m\\times n$ matrix, including non-square and non-invertible matrices."],
+            ["$U$", "An $m\\times m$ orthogonal matrix whose columns are the left singular vectors."],
+            ["$\\Sigma$", "An $m\\times n$ diagonal matrix of non-negative singular values, sorted by size."],
+            ["$V^T$", "The transpose of an $n\\times n$ orthogonal matrix whose columns are the right singular vectors."]
+          ])}
           <p>
             $U$ and $V$ are orthogonal and $\\Sigma$ is diagonal with non-negative
             singular values. The SVD separates rotation, scaling, and another
             rotation. Truncating the smallest singular values gives the best
             low-rank approximation, which is why it appears in compression and in
-            analyzing representation geometry.
+            analyzing representation geometry. It also explains why a matrix can be
+            full-rank in theory but numerically low-rank in practice: many singular
+            values may be tiny.
           </p>
         </div>
       </section>
@@ -164,6 +222,7 @@
         <h2 class="section-title"><span class="section-index">6.7</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Deisenroth, Faisal & Ong, Mathematics for Machine Learning — Chapters 2–4", source: "Linear algebra, analytic geometry, matrix decompositions" },
+          { title: "Stewart, Cálculo Vol. 2 — Chapter 12", source: "Vectors, dot products, and the geometry of space" },
           { title: "Strang, MIT 18.06 — selected lectures", source: "Matrices, elimination, eigenvalues, SVD" },
           { title: "Goodfellow, Bengio & Courville, Deep Learning — Chapter 2", source: "Linear algebra reference" }
         ])}

@@ -39,16 +39,34 @@
           <div class="formula">
             $$\\hat R(\\theta)=\\frac1N\\sum_{i=1}^{N}\\ell(f_\\theta(x_i),y_i)$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\hat R(\\theta)$", "The empirical risk: average loss on the training sample."],
+            ["$N$", "The number of training examples."],
+            ["$f_\\theta(x_i)$", "The model prediction for example $i$."],
+            ["$y_i$", "The target for example $i$."],
+            ["$\\ell$", "The per-example loss, such as cross-entropy or squared error."]
+          ])}
           <p>
             But the goal is low risk on unseen data. The training set, validation
             set, and test set exist to separate optimization from evaluation. The
-            validation set guides choices; the test set is used once.
+            validation set guides choices; the test set is used once. Reusing the
+            test set for decisions turns it into a validation set and destroys its
+            ability to estimate generalization.
           </p>
           <p>
             <strong>Underfitting</strong> means the model is too simple or
             under-trained; both training and validation loss are high.
             <strong>Overfitting</strong> means training loss is low but validation
-            loss rises. The gap is the signal.
+            loss rises. The gap is the signal. A third failure mode is a distribution
+            shift: validation and test loss are both high even though the model fits
+            the training distribution.
+          </p>
+          <p>
+            The bias–variance decomposition writes expected squared error as
+            bias$^2$ plus variance plus irreducible noise. More capacity usually
+            lowers bias and raises variance; regularization and more data reduce
+            variance. Modern over-parameterized networks complicate the classical
+            picture, but the diagnostic logic remains useful.
           </p>
           <div class="callout note">
             <div class="callout-icon" aria-hidden="true">i</div>
@@ -74,6 +92,19 @@
           <div class="formula">
             $$\\theta_{k+1}=\\theta_k-\\eta\\,\\hat g_k$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\theta_k$", "The parameter vector after $k$ updates."],
+            ["$\\eta$", "The learning rate."],
+            ["$\\hat g_k$", "The mini-batch gradient estimate at step $k$."],
+            ["$\\theta_{k+1}$", "The updated parameters."]
+          ])}
+          <p>
+            The mini-batch gradient is a noisy but unbiased estimate of the full
+            gradient, provided the batch is sampled uniformly. The noise is not only
+            a nuisance: it can help escape sharp minima and saddle points. The batch
+            size controls the variance of the estimate and the hardware efficiency
+            of the update.
+          </p>
           <p>
             Momentum accumulates a velocity:
           </p>
@@ -81,6 +112,17 @@
             $$v_{k+1}=\\beta v_k+\\hat g_k,\\qquad
               \\theta_{k+1}=\\theta_k-\\eta v_{k+1}$$
           </div>
+          ${MS.ui.symbols([
+            ["$v_k$", "The velocity: an exponentially weighted sum of past gradients."],
+            ["$\\beta$", "The momentum coefficient, usually around $0.9$."],
+            ["$\\hat g_k$", "The current mini-batch gradient."],
+            ["$\\eta v_{k+1}$", "The actual parameter step after momentum is applied."]
+          ])}
+          <p>
+            Momentum smooths erratic directions and accelerates consistent ones. It
+            can overshoot near a minimum, especially with a large learning rate, but
+            it often traverses long flat valleys much faster than plain SGD.
+          </p>
           <p>
             Adam keeps a running mean and variance of the gradient:
           </p>
@@ -88,15 +130,30 @@
             $$m_k=\\beta_1m_{k-1}+(1-\\beta_1)\\hat g_k,\\qquad
               v_k=\\beta_2v_{k-1}+(1-\\beta_2)\\hat g_k^2$$
           </div>
+          ${MS.ui.symbols([
+            ["$m_k$", "The first moment estimate: a running average of the gradient."],
+            ["$v_k$", "The second moment estimate: a running average of squared gradients."],
+            ["$\\beta_1$", "The decay rate for the first moment, usually $0.9$."],
+            ["$\\beta_2$", "The decay rate for the second moment, usually $0.999$."],
+            ["$\\hat g_k^2$", "The element-wise square of the current gradient."]
+          ])}
           <div class="formula">
             $$\\hat m_k=\\frac{m_k}{1-\\beta_1^k},\\qquad
               \\hat v_k=\\frac{v_k}{1-\\beta_2^k},\\qquad
               \\theta_{k+1}=\\theta_k-\\eta\\frac{\\hat m_k}{\\sqrt{\\hat v_k}+\\epsilon}$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\hat m_k$", "The bias-corrected first moment."],
+            ["$\\hat v_k$", "The bias-corrected second moment."],
+            ["$1-\\beta_1^k,\\ 1-\\beta_2^k$", "Correction factors that account for the zero initialization of the moments."],
+            ["$\\epsilon$", "A tiny constant that prevents division by zero."],
+            ["$\\eta\\hat m_k/(\\sqrt{\\hat v_k}+\\epsilon)$", "The adaptive step: large for consistently small gradients, small for large ones."]
+          ])}
           <p>
             The bias correction matters in the first few steps, when the moment
             estimates start at zero. Adam is often a strong default, but SGD with
-            momentum can generalize better in some settings.
+            momentum can generalize better in some settings. The choice is empirical,
+            not universal.
           </p>
         </div>
       </section>
@@ -117,6 +174,20 @@
             $$W_{ij}\\sim\\mathcal N\\left(0,\\frac{2}{n_{\\text{in}}}\\right)
               \\quad\\text{(He)}$$
           </div>
+          ${MS.ui.symbols([
+            ["$W_{ij}$", "A single weight in the layer."],
+            ["$\\mathcal N(0,\\sigma^2)$", "A normal distribution with mean zero and variance $\\sigma^2$."],
+            ["$n_{\\text{in}}$", "The number of input features to the layer (fan-in)."],
+            ["$2/n_{\\text{in}}$", "The He variance, chosen to preserve activation variance through ReLU layers."]
+          ])}
+          <p>
+            Xavier/Glorot initialization uses a variance that balances fan-in and
+            fan-out, $2/(n_{\\text{in}}+n_{\\text{out}})$, which suits tanh and
+            sigmoid networks. He initialization replaces the numerator with $2$ to
+            compensate for ReLU zeroing half of its inputs. The goal in both cases is
+            to keep the variance of activations and gradients roughly constant across
+            layers, avoiding exponential decay or growth at initialization.
+          </p>
           <p>
             Normalization stabilizes activation distributions:
           </p>
@@ -125,8 +196,18 @@
             <li><strong>Layer normalization</strong> normalizes over the feature dimension of each example and is standard in Transformers.</li>
           </ul>
           <p>
+            Both compute a mean and variance and then apply a learned scale and
+            shift. Batch norm couples examples in a batch, which is awkward for
+            variable-length sequences; layer norm treats each example independently,
+            which is why it dominates in language models. Pre-norm residual blocks
+            place normalization before the sublayer, while post-norm places it after;
+            pre-norm is generally easier to optimize at depth.
+          </p>
+          <p>
             Learning-rate schedules matter too. Warmup avoids large early updates;
-            cosine or step decay reduces the rate as training stabilizes.
+            cosine or step decay reduces the rate as training stabilizes. A schedule
+            is a bet about non-stationarity: early training needs exploration, late
+            training needs fine adjustment.
           </p>
         </div>
       </section>
@@ -143,6 +224,23 @@
             <li><strong>Early stopping</strong> stops when validation loss stops improving.</li>
             <li><strong>Label smoothing</strong> softens one-hot targets.</li>
           </ul>
+          <div class="formula">
+            $$L_{\\text{reg}}(\\theta)=L(\\theta)+\\lambda\\lVert\\theta\\rVert_2^2$$
+          </div>
+          ${MS.ui.symbols([
+            ["$L_{\\text{reg}}$", "The regularized training objective."],
+            ["$L(\\theta)$", "The original data loss, such as cross-entropy."],
+            ["$\\lambda$", "The regularization strength; larger values penalize large weights more."],
+            ["$\\lVert\\theta\\rVert_2^2$", "The sum of squared parameter values, which discourages large weights."]
+          ])}
+          <p>
+            Weight decay is equivalent to a Gaussian prior on the parameters in a
+            Bayesian view. Dropout can be understood as training an ensemble of
+            thinned networks and averaging at inference time. Early stopping is a
+            form of implicit regularization: it limits how far the parameters travel
+            from initialization. Label smoothing prevents the model from becoming
+            overconfident in one-hot targets.
+          </p>
           <p>
             Debugging is mostly diagnosis: a loss that does not move suggests a
             broken gradient or zero learning rate; a loss that explodes suggests too

@@ -41,18 +41,60 @@
             $$f_\\theta : \\text{tokens} \\to \\Delta^{V}$$
             <div class="formula-caption">$\\Delta^{V}$ is the set of probability distributions over a vocabulary of size $V$.</div>
           </div>
+          ${MS.ui.symbols([
+            ["$f_\\theta$", "The model as a whole: a function with fixed architecture and learned parameters $\\theta$."],
+            ["$\\theta$", "The full parameter vector — every weight matrix, bias, embedding entry, and normalization scale."],
+            ["$\\text{tokens}$", "The input sequence of discrete token IDs, usually preceded by a special beginning token."],
+            ["$\\Delta^{V}$", "The probability simplex: all vectors of length $V$ with non-negative entries that sum to one."],
+            ["$V$", "Vocabulary size — the number of distinct tokens the model can read or emit."]
+          ])}
+          <p>
+            The output is not a token; it is a distribution over all tokens. During
+            inference, a separate decoding rule — greedy selection, sampling, beam
+            search — chooses one token from that distribution. This separation is
+            important: the model's job is to score continuations, while decoding is
+            a policy layered on top of those scores.
+          </p>
+          <p>
+            The parameters $\\theta$ are not stored inside the formula above; they are
+            the reason the formula is useful. Training searches for a setting of
+            $\\theta$ that makes the observed text probable. Inference freezes
+            $\\theta$ and evaluates the function on new context.
+          </p>
           <p>
             Everything else — tokenization, embeddings, attention, training,
             sampling — exists to make this function useful, trainable, and
             efficient. The central training objective is next-token prediction:
           </p>
           <div class="formula">
-            $$p(x_1,\\ldots,x_T)=\\prod_{t=1}^{T}p(x_t\\mid x_{<t})$$
+            $$p(x_1,\\ldots,x_T)=\\prod_{t=1}^{T}p(x_t\\mid x_{&lt;t})$$
           </div>
+          ${MS.ui.symbols([
+            ["$x_1,\\ldots,x_T$", "A concrete token sequence of length $T$."],
+            ["$x_t$", "The token at position $t$."],
+            ["$x_{&lt;t}$", "The complete prefix before position $t$: $(x_1,\\ldots,x_{t-1})$."],
+            ["$p(x_t\\mid x_{&lt;t})$", "The model's conditional probability of the next token given the prefix."],
+            ["$\\prod_{t=1}^{T}$", "The product over all positions, which follows from repeatedly applying the chain rule of probability."]
+          ])}
           <p>
             This factorization is why a decoder-only model can be trained on raw
             text: every position provides a supervised target, namely the next
-            token.
+            token. Training maximizes the log-likelihood, which is the same as
+            minimizing the average negative log-likelihood:
+          </p>
+          <div class="formula">
+            $$\\mathcal{L}(\\theta)=-\\frac{1}{T}\\sum_{t=1}^{T}\\log p_\\theta(x_t\\mid x_{&lt;t})$$
+          </div>
+          ${MS.ui.symbols([
+            ["$\\mathcal{L}(\\theta)$", "The average cross-entropy loss over the sequence."],
+            ["$\\log p_\\theta(x_t\\mid x_{&lt;t})$", "The log-probability the model assigns to the correct next token."],
+            ["$\\frac{1}{T}\\sum_{t=1}^{T}$", "Averaging over positions so that sequence length does not change the scale of the loss."]
+          ])}
+          <p>
+            Minimizing this loss is equivalent to maximizing the probability of the
+            training text under the model. The negative sign turns a maximization
+            problem into a minimization problem, which is the form every gradient
+            descent optimizer expects.
           </p>
           <div class="callout key">
             <div class="callout-icon" aria-hidden="true">◆</div>
@@ -85,6 +127,54 @@
             The softmax is the final step that turns arbitrary scores into a
             probability distribution.
           </p>
+          <p>
+            More explicitly, if the tokenizer maps text to IDs
+            $c_1,\\ldots,c_T$, the embedding matrix $E$ produces one vector per
+            position, the Transformer produces contextual states $\\mathbf{h}_t$,
+            and the output projection produces one logit per vocabulary entry:
+          </p>
+          <div class="formula">
+            $$\\mathbf{e}_t=E[c_t],\\qquad
+              \\mathbf{h}_1,\\ldots,\\mathbf{h}_T=\\operatorname{Transformer}(\\mathbf{e}_1,\\ldots,\\mathbf{e}_T),\\qquad
+              \\mathbf{z}_t=W_U\\mathbf{h}_t+\\mathbf{b}_U$$
+          </div>
+          ${MS.ui.symbols([
+            ["$c_t$", "The integer token ID at position $t$, produced by the tokenizer."],
+            ["$E\\in\\mathbb{R}^{V\\times d_{model}}$", "The embedding matrix. Row $E[c_t]$ is the learned vector for token $c_t$."],
+            ["$\\mathbf{e}_t\\in\\mathbb{R}^{d_{model}}$", "The input embedding at position $t$."],
+            ["$\\mathbf{h}_t\\in\\mathbb{R}^{d_{model}}$", "The contextual hidden state after the Transformer blocks. It depends on the whole prefix."],
+            ["$W_U\\in\\mathbb{R}^{V\\times d_{model}}$", "The output (unembedding) matrix that maps a hidden state to vocabulary logits."],
+            ["$\\mathbf{z}_t\\in\\mathbb{R}^{V}$", "The logits: one unnormalized score per vocabulary token."],
+            ["$\\mathbf{b}_U$", "The output bias, one scalar per vocabulary entry."]
+          ])}
+          <p>
+            The logits become a distribution through the softmax:
+          </p>
+          <div class="formula">
+            $$p_\\theta(x_{t+1}=v\\mid x_{&lt;t+1})
+              =\\frac{\\exp(z_{t,v})}{\\sum_{u=1}^{V}\\exp(z_{t,u})}$$
+          </div>
+          ${MS.ui.symbols([
+            ["$p_\\theta(x_{t+1}=v\\mid x_{&lt;t+1})$", "The probability assigned to vocabulary token $v$ as the next token."],
+            ["$z_{t,v}$", "The logit for vocabulary entry $v$ at position $t$."],
+            ["$\\exp(\\cdot)$", "The exponential function, which makes every score positive and amplifies differences."],
+            ["$\\sum_{u=1}^{V}\\exp(z_{t,u})$", "The normalizer that forces all $V$ probabilities to sum to one."]
+          ])}
+          <p>
+            The same embedding matrix is sometimes reused as the output matrix
+            (weight tying), which reduces parameters and often improves
+            generalization. The Transformer blocks are the only stage that mixes
+            information across positions; tokenization, embedding lookup, and the
+            final projection are otherwise position-wise operations.
+          </p>
+          <p>
+            Two practical details matter from the start. First, a tokenizer is not
+            neutral: character-level tokenizers keep the vocabulary small but make
+            sequences long, while subword tokenizers such as BPE balance vocabulary
+            size against sequence length. Second, the context window is finite. The
+            model can only condition on the last $T$ tokens, so the choice of $T$
+            is both an architectural and a computational decision.
+          </p>
         </div>
       </section>
 
@@ -97,18 +187,20 @@
             with no hidden magic:
           </p>
           <ol>
-            <li>a scalar automatic-differentiation engine,</li>
-            <li>a two-layer MLP trained on a toy problem,</li>
-            <li>a character-level RNN,</li>
-            <li>an LSTM or GRU,</li>
-            <li>a single Transformer block,</li>
-            <li>a small decoder-only GPT-style model.</li>
+            <li><strong>Scalar autodiff engine</strong> — a tiny reverse-mode engine over numbers and a few operations. It exposes the chain rule without any tensor abstractions.</li>
+            <li><strong>Two-layer MLP</strong> — introduces layers, nonlinearities, mini-batch losses, and parameter updates on a problem you can visualize.</li>
+            <li><strong>Character-level RNN</strong> — introduces time, parameter sharing, hidden state, and backpropagation through time on a small vocabulary.</li>
+            <li><strong>LSTM or GRU</strong> — replaces the fragile recurrent state with gates and an additive memory path, and makes long-range credit assignment tangible.</li>
+            <li><strong>Single Transformer block</strong> — replaces recurrence with self-attention, residual connections, and layer normalization.</li>
+            <li><strong>Small decoder-only GPT</strong> — stacks blocks, adds tokenization and sampling, and turns the architecture into a language model.</li>
           </ol>
           <p>
-            The mathematics chapters come first because every item on this ladder
-            is a composition of gradients, matrix products, and probability
-            distributions. The later implementation phase will revisit each
-            milestone, but it will not introduce new conceptual machinery.
+            Each rung adds exactly one conceptual idea. Skipping a rung tends to
+            produce a fragile understanding: a model that runs but cannot be
+            debugged. The mathematics chapters come first because every item on
+            this ladder is a composition of gradients, matrix products, and
+            probability distributions. The later implementation phase will revisit
+            each milestone, but it will not introduce new conceptual machinery.
           </p>
           <div class="callout note">
             <div class="callout-icon" aria-hidden="true">i</div>

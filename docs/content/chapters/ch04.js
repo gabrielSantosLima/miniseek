@@ -17,7 +17,7 @@
         </p>
         <div class="chapter-meta">
           <span class="meta-pill">10 hours</span>
-          <span class="meta-pill">Stewart §4.1–4.4, §4.7–4.8</span>
+          <span class="meta-pill">Stewart Vol. 1 §4.1–4.4, §4.7–4.8</span>
           <span class="meta-pill">1 interactive lab</span>
         </div>
         <nav class="chapter-toc" aria-label="In this chapter">
@@ -54,9 +54,36 @@
             $$f'(c)=0,\\quad f''(c)<0\\;\\Rightarrow\\;\\text{local maximum}$$
             $$f'(c)=0,\\quad f''(c)=0\\;\\Rightarrow\\;\\text{test is inconclusive}$$
           </div>
+          ${MS.ui.symbols([
+            ["$c$", "A critical point in the interior of the domain."],
+            ["$f''(c)>0$", "Concave up at $c$: the slope is increasing, so the graph opens upward and $c$ is a local minimum."],
+            ["$f''(c)<0$", "Concave down at $c$: the graph opens downward and $c$ is a local maximum."],
+            ["$f''(c)=0$", "The test gives no information; use the first-derivative test or higher derivatives."]
+          ])}
+          <p>
+            The mean value theorem connects average and instantaneous change: if
+            $f$ is continuous on $[a,b]$ and differentiable on $(a,b)$, there is a
+            point $c\\in(a,b)$ such that
+          </p>
+          <div class="formula">
+            $$f'(c)=\\frac{f(b)-f(a)}{b-a}$$
+          </div>
+          ${MS.ui.symbols([
+            ["$\\frac{f(b)-f(a)}{b-a}$", "The average rate of change over the interval."],
+            ["$f'(c)$", "The instantaneous rate at some interior point; the theorem guarantees at least one such point."]
+          ])}
+          <p>
+            If $f'>0$ on an interval, the mean value theorem implies $f$ is
+            increasing there; if $f'<0$, it is decreasing. This is the rigorous
+            bridge between the sign of the derivative and the shape of the graph.
+            It is also why a zero derivative is necessary but not sufficient for an
+            extremum.
+          </p>
           <p>
             On a closed interval, also evaluate the endpoints. A global extremum can
-            occur at a boundary even when the derivative there is not zero.
+            occur at a boundary even when the derivative there is not zero. The
+            closed-interval method is therefore: find interior critical points,
+            evaluate $f$ there and at both endpoints, then compare.
           </p>
           <div class="callout warn">
             <div class="callout-icon" aria-hidden="true">!</div>
@@ -81,6 +108,19 @@
           <div class="formula">
             $$x_{n+1}=x_n-\\frac{f(x_n)}{f'(x_n)}$$
           </div>
+          ${MS.ui.symbols([
+            ["$x_n$", "The current estimate of the root (or stationary point)."],
+            ["$f(x_n)$", "The current residual: how far the function is from zero."],
+            ["$f'(x_n)$", "The local slope used to convert the residual into a step."],
+            ["$x_{n+1}$", "The next estimate, obtained by following the tangent line to the $x$-axis."]
+          ])}
+          <p>
+            The method is derived by linearizing $f$ at $x_n$:
+            $f(x)\\approx f(x_n)+f'(x_n)(x-x_n)$. Setting the approximation to
+            zero and solving for $x$ gives the update. Near a simple root, the
+            error roughly squares at each step (quadratic convergence), which is
+            why Newton's method can be dramatically faster than bisection.
+          </p>
           <p>
             It converges very quickly near a simple root, but it can diverge or cycle
             when the initial guess is far away or the derivative is small. The same
@@ -93,6 +133,10 @@
           <div class="formula">
             $$x_{n+1}=x_n-\\frac{f'(x_n)}{f''(x_n)}$$
           </div>
+          ${MS.ui.symbols([
+            ["$f'(x_n)$", "The gradient at the current point."],
+            ["$f''(x_n)$", "The curvature. The step is large when curvature is small, which is why Newton's method can be unstable near flat regions."]
+          ])}
         </div>
       </section>
 
@@ -106,6 +150,21 @@
             $$x_{k+1}=x_k-\\eta f'(x_k)$$
             <div class="formula-caption">$\\eta>0$ is the learning rate.</div>
           </div>
+          ${MS.ui.symbols([
+            ["$x_k$", "The parameter estimate after $k$ updates."],
+            ["$\\eta$", "The learning rate: how far to move along the negative gradient."],
+            ["$f'(x_k)$", "The local slope at the current point."],
+            ["$x_{k+1}$", "The next estimate. The minus sign moves opposite the slope."]
+          ])}
+          <p>
+            For the quadratic $f(x)=x^2$, the update is
+            $x_{k+1}=(1-2\\eta)x_k$. It converges exactly when
+            $|1-2\\eta|<1$, i.e. $0<\\eta<1$. This tiny example already shows the
+            essential stability condition: the step size must be small enough
+            relative to the curvature. In higher dimensions, the analogue is that
+            $\\eta$ must be smaller than roughly $2/\\lambda_{\\max}$, where
+            $\\lambda_{\\max}$ is the largest curvature (eigenvalue of the Hessian).
+          </p>
           <p>
             If $f'(x_k)>0$, the function increases to the right, so the update moves
             left. If $f'(x_k)<0$, it moves right. At a minimum, the derivative is
@@ -160,7 +219,7 @@
       <section class="chapter-section">
         <h2 class="section-title"><span class="section-index">4.7</span> Reading</h2>
         ${MS.ui.readingList([
-          { title: "Stewart, Calculus — Chapter 4", source: "§4.1–4.4 extrema and derivative tests; §4.7–4.8 optimization and Newton's method" },
+          { title: "Stewart, Cálculo Vol. 1 — Chapter 4", source: "§4.1–4.4 extrema and derivative tests; §4.7–4.8 optimization and Newton's method" },
           { title: "Goodfellow, Bengio & Courville, Deep Learning — §4.3", source: "The loss-surface perspective on optimization" }
         ])}
       </section>

@@ -17,7 +17,7 @@
         </p>
         <div class="chapter-meta">
           <span class="meta-pill">10 hours</span>
-          <span class="meta-pill">Stewart §1.1–1.5, §2.1–2.8</span>
+          <span class="meta-pill">Stewart Vol. 1 §1.1–1.5, §2.1–2.8</span>
           <span class="meta-pill">3 interactive labs</span>
         </div>
         <nav class="chapter-toc" aria-label="In this chapter">
@@ -52,6 +52,25 @@
             $h(x)=g(f(x))$, the output of $f$ becomes the input of $g$. A neural
             network is a long composition of affine maps and nonlinearities.
           </p>
+          <p>
+            Stewart insists on four representations of a function: verbal,
+            numerical, visual, and algebraic. Each one exposes something different.
+            A table of values reveals a trend; a graph reveals shape and
+            asymptotes; a formula reveals exact structure; a sentence reveals the
+            modelling assumption. In this course, you should be able to move
+            between all four. A loss curve is a numerical/visual representation; a
+            closed-form gradient is an algebraic one.
+          </p>
+          <p>
+            Two structural properties recur constantly. An <strong>even</strong>
+            function satisfies $f(-x)=f(x)$ and is symmetric about the $y$-axis;
+            an <strong>odd</strong> function satisfies $f(-x)=-f(x)$ and is
+            symmetric about the origin. An <strong>inverse</strong> function
+            reverses the input-output relation and exists only when the original
+            function is one-to-one on its domain. The logarithm is the inverse of
+            the exponential, which is why $\\ln(e^x)=x$ and $e^{\\ln x}=x$ for
+            $x>0$.
+          </p>
           <div class="callout note">
             <div class="callout-icon" aria-hidden="true">i</div>
             <div>
@@ -77,6 +96,31 @@
             $$\\lim_{x\\to a}f(x)=L$$
             <div class="formula-caption">$f(x)$ can be made arbitrarily close to $L$ by taking $x$ close enough to $a$ (but not equal to $a$).</div>
           </div>
+          ${MS.ui.symbols([
+            ["$x\\to a$", "The input approaches $a$ from either side, but is never required to equal $a$."],
+            ["$f(x)$", "The output of the function at the current input."],
+            ["$L$", "The limiting value: the number the outputs approach."],
+            ["$\\lim$", "A statement about behaviour near a point, not necessarily the value at that point."]
+          ])}
+          <p>
+            The two-sided limit exists only when both one-sided limits exist and
+            agree:
+          </p>
+          <div class="formula">
+            $$\\lim_{x\\to a^-}f(x)=\\lim_{x\\to a^+}f(x)=L$$
+          </div>
+          ${MS.ui.symbols([
+            ["$x\\to a^-$", "Approach $a$ from values smaller than $a$ (from the left)."],
+            ["$x\\to a^+$", "Approach $a$ from values larger than $a$ (from the right)."]
+          ])}
+          <p>
+            Limit laws let you combine limits of sums, products, quotients, and
+            compositions, provided the individual limits exist and denominators do
+            not vanish. The squeeze theorem handles functions bounded between two
+            simpler functions. These tools matter numerically: a model's loss can
+            oscillate or diverge, and the limit language is how we describe that
+            behaviour precisely.
+          </p>
           <p>
             Limits can fail to exist because the left and right approaches disagree,
             because the function grows without bound, or because it oscillates.
@@ -87,10 +131,23 @@
               \\lim_{x\\to a}f(x)\\text{ exists},\\qquad
               \\lim_{x\\to a}f(x)=f(a)$$
           </div>
+          ${MS.ui.symbols([
+            ["$f(a)$ defined", "The point $a$ is in the domain; there is an actual output to compare against."],
+            ["$\\lim_{x\\to a}f(x)$ exists", "The left and right approaches agree on a finite value."],
+            ["$\\lim_{x\\to a}f(x)=f(a)$", "The limiting value equals the actual value: the graph has no hole or jump at $a$."]
+          ])}
+          <p>
+            The intermediate value theorem is the formal reason a continuous
+            function cannot jump over a value. If $f$ is continuous on $[a,b]$ and
+            $N$ lies between $f(a)$ and $f(b)$, then there is at least one $c\\in
+            (a,b)$ with $f(c)=N$. This is the theorem behind bisection and many
+            root-finding guarantees.
+          </p>
           <p>
             Continuity matters for optimization because differentiability implies
             continuity. If a function is discontinuous at a point, it cannot have a
-            derivative there.
+            derivative there. The converse is false: $|x|$ is continuous at $0$ but
+            has no derivative there because the left and right slopes disagree.
           </p>
           <p>
             The derivative itself is a limit. That is not a technicality: it is the
@@ -110,10 +167,30 @@
           <div class="formula">
             $$f'(a)=\\lim_{h\\to 0}\\frac{f(a+h)-f(a)}{h}$$
           </div>
+          ${MS.ui.symbols([
+            ["$f'(a)$", "The derivative of $f$ at the point $a$: the instantaneous rate of change."],
+            ["$h$", "A small change in the input. The limit $h\\to 0$ makes the interval shrink."],
+            ["$f(a+h)-f(a)$", "The change in the output over the interval from $a$ to $a+h$."],
+            ["$\\frac{f(a+h)-f(a)}{h}$", "The average rate of change — the slope of the secant line."]
+          ])}
           <p>
             Geometrically, the quotient is the slope of a <strong>secant</strong>
             line through $(a,f(a))$ and $(a+h,f(a+h))$. As $h\\to 0$, the secant
             becomes the <strong>tangent</strong> line at $a$.
+          </p>
+          <p>
+            The derivative is a function in its own right: $f'$ assigns to each
+            input the local slope of $f$. Higher derivatives repeat the operation.
+            $f''$ measures how the slope changes; in optimization, the sign of
+            $f''$ separates a minimum from a maximum. The notation
+            $\\frac{dy}{dx}$ emphasises that the derivative is a ratio of changes,
+            while $Df(x)$ emphasises that it is a linear operator.
+          </p>
+          <p>
+            A function that has a derivative at $a$ is called
+            <strong>differentiable</strong> there. Differentiability is a stronger
+            condition than continuity: it rules out corners, cusps, and vertical
+            tangents. The absolute value at zero is the standard counterexample.
           </p>
           <p>
             The tangent line is the first-order approximation:
@@ -122,6 +199,19 @@
             $$f(x)\\approx f(a)+f'(a)(x-a)$$
             <div class="formula-caption">Near $a$, the curve and its tangent line almost coincide.</div>
           </div>
+          ${MS.ui.symbols([
+            ["$f(a)$", "The value of the function at the expansion point."],
+            ["$f'(a)$", "The local slope at the expansion point."],
+            ["$x-a$", "The displacement from the expansion point."],
+            ["$f'(a)(x-a)$", "The linear correction predicted by the slope."]
+          ])}
+          <p>
+            This is the one-dimensional version of the Taylor expansion used
+            throughout optimization. The linear term is the gradient; the next term
+            would involve $f''(a)$ and curvature. Gradient descent is built on the
+            assumption that the linear approximation is valid for a small enough
+            step.
+          </p>
           <p>
             In optimization, $f'(a)$ tells us how a small change in the input changes
             the output. If $f'(a)>0$, increasing the input increases the output; if
@@ -156,7 +246,7 @@
       <section class="chapter-section">
         <h2 class="section-title"><span class="section-index">2.7</span> Reading</h2>
         ${MS.ui.readingList([
-          { title: "Stewart, Calculus — Chapters 1 and 2", source: "§1.1–1.5 functions and models; §2.1–2.8 limits and derivatives" },
+          { title: "Stewart, Cálculo Vol. 1 — Chapters 1 and 2", source: "§1.1–1.5 functions and models; §2.1–2.8 limits and derivatives" },
           { title: "Mathematics for Machine Learning — §5.1", source: "The machine-learning framing of derivatives" }
         ])}
       </section>

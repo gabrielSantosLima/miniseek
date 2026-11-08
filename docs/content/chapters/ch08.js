@@ -39,6 +39,21 @@
             $$\\hat{y}=w^Tx+b$$
             <div class="formula-caption">The mean-squared error is $\\frac1N\\sum_i(\\hat y_i-y_i)^2$.</div>
           </div>
+          ${MS.ui.symbols([
+            ["$\\hat{y}$", "The model's prediction for one example."],
+            ["$w$", "The weight vector: one coefficient per input feature."],
+            ["$x$", "The input feature vector."],
+            ["$b$", "The bias: a learned offset independent of the input."],
+            ["$w^Tx$", "The dot product of weights and features — the linear score."]
+          ])}
+          <p>
+            The model is linear in its parameters, not necessarily in its inputs:
+            you can feed transformed features $\\phi(x)$ and still use a linear
+            model. The mean-squared error is the maximum-likelihood objective under
+            a Gaussian noise assumption. Its gradient with respect to $w$ is
+            proportional to the prediction error, which is why the update has the
+            familiar form “move in the direction that reduces the residual.”
+          </p>
           <p>
             Logistic regression passes the same score through a sigmoid to produce a
             probability:
@@ -47,16 +62,25 @@
             $$\\hat{p}=\\sigma(w^Tx+b),\\qquad
               \\sigma(z)=\\frac{1}{1+e^{-z}}$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\hat{p}$", "The predicted probability of the positive class."],
+            ["$\\sigma$", "The logistic sigmoid, mapping any real score to $(0,1)$."],
+            ["$z=w^Tx+b$", "The log-odds or logit: the linear score before the sigmoid."],
+            ["$e^{-z}$", "The exponential that makes the sigmoid saturate at both ends."]
+          ])}
           <p>
             Training minimizes binary cross-entropy,
             $-\\sum_i y_i\\log\\hat p_i+(1-y_i)\\log(1-\\hat p_i)$.
             The model is still linear in its parameters, so its decision boundary is
-            a hyperplane.
+            a hyperplane. The gradient with respect to the logit is $\\hat p-y$,
+            the same clean error signal that appears in softmax regression.
           </p>
           <p>
             The perceptron is the historical precursor: a linear threshold unit. It
             can separate linearly separable data, but it cannot represent XOR or any
-            other non-linear boundary.
+            other non-linear boundary. The perceptron learning rule updates weights
+            only when a point is misclassified, which is enough for linear
+            separability but not for general classification.
           </p>
           <div class="callout warn">
             <div class="callout-icon" aria-hidden="true">!</div>
@@ -82,24 +106,36 @@
             $$\\mathbf{h}=\\phi(W_1\\mathbf{x}+\\mathbf{b}_1),\\qquad
               \\hat{\\mathbf{y}}=W_2\\mathbf{h}+\\mathbf{b}_2$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\mathbf{x}$", "The input vector."],
+            ["$W_1,\\mathbf{b}_1$", "Weights and bias of the hidden layer."],
+            ["$\\mathbf{h}$", "The hidden representation: learned features after the nonlinearity."],
+            ["$\\phi$", "The activation function, applied element-wise."],
+            ["$W_2,\\mathbf{b}_2$", "Weights and bias of the output layer."],
+            ["$\\hat{\\mathbf{y}}$", "The output prediction or logits."]
+          ])}
           <p>
             The activation $\\phi$ is applied element-wise. Common choices:
           </p>
           <ul>
-            <li><strong>Sigmoid:</strong> bounded, smooth, but saturating.</li>
-            <li><strong>Tanh:</strong> zero-centred and smooth, still saturating.</li>
-            <li><strong>ReLU:</strong> cheap, non-saturating for positive inputs, but has a dead zone.</li>
-            <li><strong>GELU / Swish:</strong> smooth, non-monotonic, common in Transformers.</li>
+            <li><strong>Sigmoid:</strong> bounded, smooth, but saturating. Its derivative is at most $1/4$, so deep stacks lose signal quickly.</li>
+            <li><strong>Tanh:</strong> zero-centred and smooth, still saturating. It often trains better than sigmoid in hidden layers.</li>
+            <li><strong>ReLU:</strong> cheap, non-saturating for positive inputs, but has a dead zone. It is the default for many feed-forward networks.</li>
+            <li><strong>GELU / Swish:</strong> smooth, non-monotonic, common in Transformers. They avoid a hard zero region and have well-behaved gradients.</li>
           </ul>
           <p>
             Without nonlinearities, a composition of affine maps is still affine:
             $W_2(W_1x+b_1)+b_2=(W_2W_1)x+(W_2b_1+b_2)$. Depth without
-            nonlinearity adds no representational power.
+            nonlinearity adds no representational power. This is the single most
+            important algebraic fact behind deep learning: depth matters only when
+            it is interleaved with nonlinearities.
           </p>
           <p>
             With nonlinearities, hidden units act as learned features. The output
             layer combines those features linearly, which is why the final layer of
             a language model is often just a linear projection to vocabulary logits.
+            Each hidden unit defines a ridge or a region in input space; composing
+            many of them lets the network approximate complex boundaries.
           </p>
         </div>
       </section>

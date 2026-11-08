@@ -17,7 +17,7 @@
         </p>
         <div class="chapter-meta">
           <span class="meta-pill">16 hours</span>
-          <span class="meta-pill">Stewart Ch. 14</span>
+          <span class="meta-pill">Stewart Vol. 2 Ch. 14</span>
           <span class="meta-pill">1 interactive lab</span>
         </div>
         <nav class="chapter-toc" aria-label="In this chapter">
@@ -41,11 +41,32 @@
             $$\\frac{\\partial f}{\\partial x}
               =\\lim_{h\\to 0}\\frac{f(x+h,y)-f(x,y)}{h}$$
           </div>
+          ${MS.ui.symbols([
+            ["$f(x,y)$", "A scalar-valued function of two inputs — for example, a loss surface over two parameters."],
+            ["$\\partial f/\\partial x$", "The partial derivative with respect to $x$: the slope in the $x$ direction while $y$ is held fixed."],
+            ["$h$", "A small change in $x$ only; $y$ does not change."],
+            ["$\\partial$", "The partial-derivative symbol, used when other variables are held constant."]
+          ])}
           <p>
             Geometrically, $\\partial f/\\partial x$ is the slope of the surface in
             the $x$ direction at a fixed $y$. The two partials together describe the
-            local slope in every coordinate direction.
+            local slope in every coordinate direction. If you stand at a point on a
+            hillside, the partial in the east direction is the slope you feel while
+            walking exactly east; the partial in the north direction is the slope
+            while walking exactly north.
           </p>
+          <p>
+            The total differential packages the first-order change into a single
+            linear expression:
+          </p>
+          <div class="formula">
+            $$df=\\frac{\\partial f}{\\partial x}\\,dx+\\frac{\\partial f}{\\partial y}\\,dy$$
+          </div>
+          ${MS.ui.symbols([
+            ["$df$", "The first-order change in $f$ for small changes $dx,dy$."],
+            ["$dx,dy$", "Small independent changes in the two inputs."],
+            ["$\\partial f/\\partial x,\\ \\partial f/\\partial y$", "The local sensitivities multiplying those changes."]
+          ])}
           <p>
             Level curves are the sets $f(x,y)=c$. They are the two-dimensional
             analogue of contour lines on a map. The gradient will turn out to be
@@ -75,6 +96,11 @@
             $$\\nabla f(x,y)=\\left(\\frac{\\partial f}{\\partial x},
               \\frac{\\partial f}{\\partial y}\\right)$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\nabla f$", "The gradient: a vector of all first partial derivatives."],
+            ["$\\partial f/\\partial x$", "The component of the gradient in the $x$ direction."],
+            ["$\\partial f/\\partial y$", "The component of the gradient in the $y$ direction."]
+          ])}
           <p>
             For a unit vector $\\mathbf{u}$, the directional derivative is:
           </p>
@@ -82,10 +108,17 @@
             $$D_{\\mathbf{u}}f=\\nabla f\\cdot\\mathbf{u}$$
             <div class="formula-caption">The dot product is largest when $\\mathbf{u}$ points along $\\nabla f$.</div>
           </div>
+          ${MS.ui.symbols([
+            ["$\\mathbf{u}$", "A unit vector: the direction in which the derivative is measured."],
+            ["$D_{\\mathbf{u}}f$", "The rate of change of $f$ in the direction $\\mathbf{u}$."],
+            ["$\\nabla f\\cdot\\mathbf{u}$", "The dot product, equal to $\\lVert\\nabla f\\rVert\\cos\\theta$, where $\\theta$ is the angle between the gradient and $\\mathbf{u}$."]
+          ])}
           <p>
             Therefore the gradient points in the direction of steepest ascent, and
             its magnitude is the maximum rate of increase. Gradient descent moves in
-            the opposite direction.
+            the opposite direction. The gradient is also orthogonal to the level
+            curve through the point: moving along a level curve does not change $f$,
+            so the directional derivative in that direction is zero.
           </p>
           <p>
             At a critical point, $\\nabla f=0$. To classify it, look at the Hessian:
@@ -96,9 +129,19 @@
               f_{yx} & f_{yy}
             \\end{bmatrix}$$
           </div>
+          ${MS.ui.symbols([
+            ["$H$", "The Hessian matrix of second partial derivatives."],
+            ["$f_{xx}$", "The second partial derivative in $x$: curvature along the $x$ direction."],
+            ["$f_{yy}$", "Curvature along the $y$ direction."],
+            ["$f_{xy}=f_{yx}$", "The mixed partial derivative. For smooth functions, the order of differentiation does not matter (Clairaut's theorem)."]
+          ])}
           <p>
             A positive-definite Hessian means a local minimum, a negative-definite
             Hessian means a local maximum, and an indefinite Hessian means a saddle.
+            In two dimensions this can be checked from the determinant and the
+            $f_{xx}$ entry: if $f_{xx}f_{yy}-f_{xy}^2>0$ and $f_{xx}>0$, it is a
+            minimum; if the determinant is positive and $f_{xx}<0$, it is a maximum;
+            if the determinant is negative, it is a saddle.
           </p>
           <div class="callout warn">
             <div class="callout-icon" aria-hidden="true">!</div>
@@ -125,6 +168,12 @@
             $$J_{ij}=\\frac{\\partial f_i}{\\partial x_j},
               \\qquad J\\in\\mathbb{R}^{m\\times n}$$
           </div>
+          ${MS.ui.symbols([
+            ["$f_i$", "The $i$-th output component of the vector-valued function $\\mathbf{f}$."],
+            ["$x_j$", "The $j$-th input component."],
+            ["$J_{ij}$", "The partial derivative of output $i$ with respect to input $j$."],
+            ["$m,n$", "Output and input dimensions. The Jacobian is $m\\times n$."]
+          ])}
           <p>
             The multivariable chain rule is a product of Jacobians. If
             $\\mathbf{y}=g(\\mathbf{x})$ and $L=h(\\mathbf{y})$, then:
@@ -134,11 +183,37 @@
               =\\left(\\frac{\\partial \\mathbf{y}}{\\partial \\mathbf{x}}\\right)^T
                 \\frac{\\partial L}{\\partial \\mathbf{y}}$$
           </div>
+          ${MS.ui.symbols([
+            ["$\\partial L/\\partial \\mathbf{x}$", "The gradient of the scalar loss with respect to the input vector; same shape as $\\mathbf{x}$."],
+            ["$\\partial \\mathbf{y}/\\partial \\mathbf{x}$", "The Jacobian of the intermediate map $g$; shape $m\\times n$."],
+            ["$(\\cdot)^T$", "Transpose, which turns an $m\\times n$ Jacobian into an $n\\times m$ matrix."],
+            ["$\\partial L/\\partial \\mathbf{y}$", "The upstream gradient; same shape as $\\mathbf{y}$."]
+          ])}
           <p>
             The right-hand side is a <strong>vector-Jacobian product</strong>
             (VJP): a vector multiplied by a Jacobian transpose. Reverse-mode
             automatic differentiation computes one VJP per node, which is why it is
-            efficient for a scalar loss.
+            efficient for a scalar loss. A forward-mode pass would instead compute
+            Jacobian-vector products and would need one pass per input dimension.
+          </p>
+          <p>
+            A second-order Taylor expansion around a point $\\mathbf{a}$ explains
+            why the Hessian controls local geometry:
+          </p>
+          <div class="formula">
+            $$f(\\mathbf{a}+\\Delta)
+              \\approx f(\\mathbf{a})+\\nabla f(\\mathbf{a})^T\\Delta
+              +\\frac12\\Delta^T H(\\mathbf{a})\\Delta$$
+          </div>
+          ${MS.ui.symbols([
+            ["$\\Delta$", "A small displacement from the expansion point."],
+            ["$\\nabla f(\\mathbf{a})^T\\Delta$", "The first-order (linear) change predicted by the gradient."],
+            ["$\\frac12\\Delta^T H\\Delta$", "The second-order (quadratic) correction predicted by the Hessian."]
+          ])}
+          <p>
+            At a critical point the linear term vanishes, so the quadratic term is
+            the first non-zero piece. Its sign determines whether the point curves
+            upward in every direction, curves downward, or has mixed directions.
           </p>
           <p>
             For a dense layer $\\mathbf{y}=W\\mathbf{x}+\\mathbf{b}$ with
@@ -147,10 +222,19 @@
           <div class="formula">
             $$\\delta_{\\mathbf{x}}=W^T\\delta_{\\mathbf{y}}$$
           </div>
+          ${MS.ui.symbols([
+            ["$W\\in\\mathbb{R}^{m\\times n}$", "A dense layer mapping $n$ input features to $m$ output features."],
+            ["$\\delta_{\\mathbf{y}}$", "The upstream gradient with respect to the layer output; shape $m$."],
+            ["$W^T$", "The transpose, which maps an $m$-vector back to an $n$-vector."],
+            ["$\\delta_{\\mathbf{x}}$", "The gradient with respect to the layer input; shape $n$."]
+          ])}
           <p>
             This single equation is the entire backward pass of a linear layer. The
             gradient with respect to $W$ is
-            $\\delta_{\\mathbf{y}}\\mathbf{x}^T$.
+            $\\delta_{\\mathbf{y}}\\mathbf{x}^T$, an outer product that has the same
+            shape as $W$. The gradient with respect to the bias is just
+            $\\delta_{\\mathbf{y}}$, because addition distributes the upstream
+            gradient unchanged.
           </p>
         </div>
       </section>
@@ -180,7 +264,7 @@
       <section class="chapter-section">
         <h2 class="section-title"><span class="section-index">5.7</span> Reading</h2>
         ${MS.ui.readingList([
-          { title: "Stewart, Calculus — Chapter 14", source: "§14.1–14.3 partial derivatives; §14.4–14.5 tangent planes and chain rule; §14.6–14.8 gradient, extrema, Lagrange multipliers" },
+          { title: "Stewart, Cálculo Vol. 2 — Chapter 14", source: "§14.1–14.3 partial derivatives; §14.4–14.5 tangent planes and chain rule; §14.6–14.8 gradient, extrema, Lagrange multipliers" },
           { title: "Parr & Howard, The Matrix Calculus You Need For Deep Learning — §1–4", source: "Matrix chain rule and vector-Jacobian products" },
           { title: "Goodfellow, Bengio & Courville, Deep Learning — §4.3", source: "Gradients, Jacobians, and Hessians in the context of loss surfaces" }
         ])}

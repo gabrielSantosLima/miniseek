@@ -1579,8 +1579,8 @@ one item at level 5.
 ## 7. What Comes After This Plan
 
 > **Implementation status (2026-11-08):** the guide shell, reusable exercise
-> framework, and Chapters 1–10 are implemented in `docs/index.html`. Chapters
-> 11–18 appear as planned placeholders and will be written in order.
+> framework, and Chapters 1–14 are implemented in `docs/index.html`. Chapters
+> 15–18 appear as planned placeholders and will be written in order.
 
 Once this plan is approved:
 

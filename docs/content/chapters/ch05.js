@@ -25,6 +25,7 @@
           <a href="#gradient">The gradient</a>
           <a href="#jacobian">Jacobians and VJPs</a>
           <a href="#lab">Lab</a>
+          <a href="#worked">Worked example</a>
           <a href="#check">Check your understanding</a>
         </nav>
       </header>
@@ -244,12 +245,141 @@
         <div data-widget="gradient-field"></div>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">5.5</span> Worked example: the rules end to end</h2>
+        <div class="prose">
+          <p>
+            This example is the bridge between the calculus rules and the
+            backpropagation chapter. Work every line on paper before reading the next
+            step. The numbers are exact, and every result is checked at the end.
+          </p>
+        </div>
+
+        <div class="worked-example">
+          <h3>One function, six calculations</h3>
+          <p class="example-intro">
+            Use $h(x)=(x^2+1)^3$ for the one-variable warm-up, then
+            $f(x,y)=x^2y+3xy^2$ at the point $(1,2)$ for the multivariable work.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>Power rule and chain rule</h4>
+              <p>
+                Write $h(x)=u^3$ with $u=x^2+1$. The outer derivative is $3u^2$ and
+                the inner derivative is $2x$:
+              </p>
+              <p>
+                $$h'(x)=3(x^2+1)^2\cdot 2x=6x(x^2+1)^2.$$
+                At $x=1$, $h'(1)=6\cdot1\cdot 2^2=24$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>Function value</h4>
+              <p>
+                $$f(1,2)=1^2\cdot2+3\cdot1\cdot2^2=2+12=14.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>Partial derivatives and gradient</h4>
+              <p>
+                Differentiate with respect to $x$ while holding $y$ fixed, then the
+                reverse:
+              </p>
+              <p>
+                $$f_x=2xy+3y^2,\qquad f_y=x^2+6xy.$$
+                At $(1,2)$:
+                $$f_x(1,2)=2\cdot1\cdot2+3\cdot2^2=4+12=16,$$
+                $$f_y(1,2)=1^2+6\cdot1\cdot2=1+12=13.$$
+                Therefore $\\nabla f(1,2)=(16,13)$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">4</span>
+            <div>
+              <h4>Directional derivative</h4>
+              <p>
+                Let $\\mathbf{u}=(3/5,4/5)$. It is a unit vector because
+                $(3/5)^2+(4/5)^2=9/25+16/25=1$. Then
+              </p>
+              <p>
+                $$D_{\\mathbf{u}}f(1,2)
+                  =\\nabla f(1,2)\\cdot\\mathbf{u}
+                  =16\\cdot\\frac35+13\\cdot\\frac45
+                  =\\frac{48}{5}+\\frac{52}{5}=20.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">5</span>
+            <div>
+              <h4>Multivariable chain rule</h4>
+              <p>
+                Put the surface on a circle: $g(t)=f(\\cos t,\\sin t)$. With
+                $x=\\cos t$ and $y=\\sin t$,
+              </p>
+              <p>
+                $$g'(t)=f_x\\,(-\\sin t)+f_y\\,(\\cos t).$$
+                At $t=0$, $(x,y)=(1,0)$, so $f_x(1,0)=0$ and $f_y(1,0)=1$. Hence
+                $g'(0)=0\\cdot0+1\\cdot1=1$.
+              </p>
+              <p>
+                Direct check: $g(t)=\\cos^2t\\sin t+3\\cos t\\sin^2t$, and
+                differentiating gives $g'(0)=1$ as well.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">6</span>
+            <div>
+              <h4>Hessian and local geometry</h4>
+              <p>
+                Differentiate the first partials again:
+              </p>
+              <p>
+                $$f_{xx}=2y,\\qquad f_{xy}=2x+6y,\\qquad f_{yy}=6x.$$
+                At $(1,2)$:
+              </p>
+              <p>
+                $$H(1,2)=\\begin{bmatrix}4&14\\\\14&6\\end{bmatrix},
+                  \\qquad \\det H=4\\cdot6-14^2=24-196=-172.$$
+              </p>
+              <p>
+                The determinant is negative, so the Hessian is indefinite and the
+                point is a saddle, not a minimum.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> $f(1,2)=14$; the gradient is $(16,13)$; the
+            unit-vector check gives $9/25+16/25=1$; the directional derivative is
+            $48/5+52/5=20$; the chain-rule result is $1$ both by the formula and by
+            direct differentiation; and the Hessian determinant is $-172&lt;0$.
+            Every number is consistent with the rules used.
+          </div>
+        </div>
+      </section>
+
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">5.5</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">5.6</span> Check your understanding</h2>
         <div data-widget="multivariable-quiz"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">5.6</span> Mastery checklist
+          <span class="section-index">5.7</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(5, [
           "Compute partial derivatives and the gradient of a scalar function.",
@@ -262,7 +392,7 @@
       </section>
 
       <section class="chapter-section">
-        <h2 class="section-title"><span class="section-index">5.7</span> Reading</h2>
+        <h2 class="section-title"><span class="section-index">5.8</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Stewart, Cálculo Vol. 2 — Chapter 14", source: "§14.1–14.3 partial derivatives; §14.4–14.5 tangent planes and chain rule; §14.6–14.8 gradient, extrema, Lagrange multipliers" },
           { title: "Parr & Howard, The Matrix Calculus You Need For Deep Learning — §1–4", source: "Matrix chain rule and vector-Jacobian products" },

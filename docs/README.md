@@ -18,6 +18,7 @@ The guide shell and Chapters 1–10 are implemented:
 
 - Chapter navigation, hash routing, light/dark theme, and local progress tracking.
 - Interactive widgets: LLM pipeline sorter, function/tangent explorer, secant-to-tangent lab, chain-rule builder, activation lab, gradient-descent lab, 2D gradient-field lab, matrix/linear-map lab, softmax/temperature lab, cross-entropy/KL lab, MLP approximation trainer, backpropagation step-through, gradient-check lab, and optimizer race.
+- Worked examples: end-to-end calculus rules (Ch. 5), perceptron weight training (Ch. 8), and a full backpropagation step with a solved exercise (Ch. 9).
 - Quizzes and mastery checklists for Chapters 1–10.
 - Chapters 11–18 are listed in the navigation with a "planned" placeholder.
 

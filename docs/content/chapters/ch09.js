@@ -25,6 +25,8 @@
           <a href="#graph">Computational graphs</a>
           <a href="#reverse">The reverse pass</a>
           <a href="#matrix">Matrix backprop</a>
+          <a href="#worked">Worked example</a>
+          <a href="#exercise">Exercise</a>
           <a href="#labs">Labs</a>
           <a href="#check">Check your understanding</a>
         </nav>
@@ -181,18 +183,265 @@
         </div>
       </section>
 
+      <section class="chapter-section" id="worked">
+        <h2 class="section-title"><span class="section-index">9.4</span> Worked example: one full forward and backward pass</h2>
+        <div class="prose">
+          <p>
+            This is a complete training step for a tiny network with two inputs, two
+            ReLU hidden units, one linear output, and squared-error loss. Every number
+            is chosen for arithmetic clarity; the method is exactly the one used for
+            large networks.
+          </p>
+          <table>
+            <thead><tr><th>Object</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Input $\\mathbf{x}$</td><td>$(x_1,x_2)=(1,2)$</td></tr>
+              <tr><td>Target</td><td>$y=1$</td></tr>
+              <tr><td>Hidden weights $W_1$</td><td>$\\begin{bmatrix}1.0&0.5\\\\-1.0&1.0\\end{bmatrix}$</td></tr>
+              <tr><td>Hidden bias $\\mathbf{b}_1$</td><td>$(0.0,0.5)$</td></tr>
+              <tr><td>Output weights $\\mathbf{v}$</td><td>$(0.5,-0.5)$</td></tr>
+              <tr><td>Output bias $b_{out}$</td><td>$0.1$</td></tr>
+              <tr><td>Learning rate $\\eta$</td><td>$0.05$</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="worked-example">
+          <h3>Forward pass and reverse pass, step by step</h3>
+          <p class="example-intro">
+            Write each intermediate value down. The backward pass will need every one
+            of them.
+          </p>
+
+          <div class="example-step">
+            <span class="step-number">1</span>
+            <div>
+              <h4>Hidden pre-activations</h4>
+              <p>
+                $$z_1=1.0\\cdot1+0.5\\cdot2+0.0=2.0,$$
+                $$z_2=-1.0\\cdot1+1.0\\cdot2+0.5=1.5.$$
+                Both are positive, so the ReLU derivatives will be $1$:
+                $a_1=2.0$ and $a_2=1.5$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">2</span>
+            <div>
+              <h4>Output and loss</h4>
+              <p>
+                $$\\hat y=0.5\\cdot2.0+(-0.5)\\cdot1.5+0.1=0.35,$$
+                $$L=(\\hat y-y)^2=(0.35-1)^2=(-0.65)^2=0.4225.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">3</span>
+            <div>
+              <h4>Output-layer gradients</h4>
+              <p>
+                $$\\frac{\\partial L}{\\partial\\hat y}=2(\\hat y-y)=2(0.35-1)=-1.3.$$
+                Multiply by the hidden activations:
+              </p>
+              <p>
+                $$\\frac{\\partial L}{\\partial v_1}=-1.3\\cdot2.0=-2.6,\\qquad
+                  \\frac{\\partial L}{\\partial v_2}=-1.3\\cdot1.5=-1.95,$$
+                $$\\frac{\\partial L}{\\partial b_{out}}=-1.3.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">4</span>
+            <div>
+              <h4>Backpropagate into the hidden layer</h4>
+              <p>
+                $$\\frac{\\partial L}{\\partial a_1}
+                  =\\frac{\\partial L}{\\partial\\hat y}\\,v_1
+                  =(-1.3)(0.5)=-0.65,$$
+                $$\\frac{\\partial L}{\\partial a_2}
+                  =(-1.3)(-0.5)=0.65.$$
+                The ReLU derivative is $1$ at both pre-activations, so
+                $\\partial L/\\partial z_1=-0.65$ and
+                $\\partial L/\\partial z_2=0.65$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">5</span>
+            <div>
+              <h4>Hidden parameter gradients</h4>
+              <p>
+                For a dense layer, $\\partial L/\\partial w_{ij}
+                =(\\partial L/\\partial z_i)x_j$. Therefore:
+              </p>
+              <p>
+                $$\\frac{\\partial L}{\\partial w_{11}}=-0.65\\cdot1=-0.65,\\qquad
+                  \\frac{\\partial L}{\\partial w_{12}}=-0.65\\cdot2=-1.3,$$
+                $$\\frac{\\partial L}{\\partial b_1}=-0.65,$$
+                $$\\frac{\\partial L}{\\partial w_{21}}=0.65\\cdot1=0.65,\\qquad
+                  \\frac{\\partial L}{\\partial w_{22}}=0.65\\cdot2=1.3,\\qquad
+                  \\frac{\\partial L}{\\partial b_2}=0.65.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">6</span>
+            <div>
+              <h4>Apply one gradient step</h4>
+              <p>
+                Use $\\theta\\leftarrow\\theta-\\eta\\,\\partial L/\\partial\\theta$
+                with $\\eta=0.05$:
+              </p>
+              <p>
+                $$w_{11}=1.0-0.05(-0.65)=1.0325,\\qquad
+                  w_{12}=0.5-0.05(-1.3)=0.565,$$
+                $$b_1=0.0-0.05(-0.65)=0.0325,$$
+                $$w_{21}=-1.0-0.05(0.65)=-1.0325,\\qquad
+                  w_{22}=1.0-0.05(1.3)=0.935,$$
+                $$b_2=0.5-0.05(0.65)=0.4675,$$
+                $$v_1=0.5-0.05(-2.6)=0.63,\\qquad
+                  v_2=-0.5-0.05(-1.95)=-0.4025,$$
+                $$b_{out}=0.1-0.05(-1.3)=0.165.$$
+              </p>
+            </div>
+          </div>
+
+          <div class="example-step">
+            <span class="step-number">7</span>
+            <div>
+              <h4>Recompute the forward pass to verify the step</h4>
+              <p>
+                $$z_1=1.0325\\cdot1+0.565\\cdot2+0.0325=2.195,$$
+                $$z_2=-1.0325\\cdot1+0.935\\cdot2+0.4675=1.305,$$
+                $$\\hat y=0.63\\cdot2.195+(-0.4025)\\cdot1.305+0.165
+                  =1.0225875,$$
+                $$L=(1.0225875-1)^2\\approx0.0005102.$$
+                The loss decreased from $0.4225$ to approximately $0.00051$.
+              </p>
+            </div>
+          </div>
+
+          <div class="example-check">
+            <strong>Review:</strong> the output gradient is $\\hat y-y=-0.65$ before
+            the factor of two; the factor of two gives $-1.3$. The hidden gradients
+            are $(-1.3)v_1$ and $(-1.3)v_2$, and the ReLU derivatives are both $1$.
+            Recomputing the forward pass after the update gives a smaller loss, so
+            the signs and the update direction are consistent.
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter-section" id="exercise">
+        <h2 class="section-title"><span class="section-index">9.5</span> Exercise: run the backward pass yourself</h2>
+        <div class="prose">
+          <p>
+            Use the same architecture as the worked example — two inputs, two ReLU
+            hidden units, one linear output, squared-error loss — but with the
+            parameters below. Compute the full training step on paper before opening
+            the solution.
+          </p>
+        </div>
+
+        <div class="exercise-card">
+          <h3>Your turn</h3>
+          <p class="exercise-intro">
+            Inputs $(2,1)$, target $y=2$, learning rate $\\eta=0.02$.
+          </p>
+          <table>
+            <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>$W_1$</td><td>$\\begin{bmatrix}0.5&-0.5\\\\-0.25&1.0\\end{bmatrix}$</td></tr>
+              <tr><td>$\\mathbf{b}_1$</td><td>$(0.1,0.0)$</td></tr>
+              <tr><td>$\\mathbf{v}$</td><td>$(0.8,-0.6)$</td></tr>
+              <tr><td>$b_{out}$</td><td>$0.2$</td></tr>
+            </tbody>
+          </table>
+          <p>Compute, in this order:</p>
+          <ol>
+            <li>the hidden pre-activations $z_1,z_2$ and activations $a_1,a_2$;</li>
+            <li>the output $\\hat y$ and the loss $L$;</li>
+            <li>$\\partial L/\\partial\\hat y$;</li>
+            <li>$\\partial L/\\partial v_1$, $\\partial L/\\partial v_2$, and $\\partial L/\\partial b_{out}$;</li>
+            <li>the hidden gradients $\\partial L/\\partial z_1$ and $\\partial L/\\partial z_2$;</li>
+            <li>all six hidden parameter gradients (four weights and two biases);</li>
+            <li>the updated parameters after one step;</li>
+            <li>the new forward loss.</li>
+          </ol>
+          <details class="solution">
+            <summary>Show the full solution</summary>
+            <p><strong>Forward:</strong></p>
+            <p>
+              $$z_1=0.5\\cdot2+(-0.5)\\cdot1+0.1=0.6,\\qquad a_1=0.6,$$
+              $$z_2=(-0.25)\\cdot2+1.0\\cdot1+0.0=0.5,\\qquad a_2=0.5,$$
+              $$\\hat y=0.8\\cdot0.6+(-0.6)\\cdot0.5+0.2=0.38,$$
+              $$L=(0.38-2)^2=(-1.62)^2=2.6244.$$
+            </p>
+            <p><strong>Output gradient:</strong></p>
+            <p>
+              $$\\frac{\\partial L}{\\partial\\hat y}=2(0.38-2)=-3.24.$$
+            </p>
+            <p><strong>Output parameters:</strong></p>
+            <p>
+              $$\\frac{\\partial L}{\\partial v_1}=-3.24\\cdot0.6=-1.944,\\qquad
+                \\frac{\\partial L}{\\partial v_2}=-3.24\\cdot0.5=-1.62,$$
+              $$\\frac{\\partial L}{\\partial b_{out}}=-3.24.$$
+            </p>
+            <p><strong>Hidden layer:</strong> both pre-activations are positive, so
+              the ReLU derivatives are $1$.</p>
+            <p>
+              $$\\frac{\\partial L}{\\partial z_1}=-3.24\\cdot0.8=-2.592,\\qquad
+                \\frac{\\partial L}{\\partial z_2}=-3.24\\cdot(-0.6)=1.944.$$
+            </p>
+            <p><strong>Hidden parameter gradients:</strong></p>
+            <p>
+              $$\\frac{\\partial L}{\\partial w_{11}}=-2.592\\cdot2=-5.184,\\qquad
+                \\frac{\\partial L}{\\partial w_{12}}=-2.592\\cdot1=-2.592,$$
+              $$\\frac{\\partial L}{\\partial b_1}=-2.592,$$
+              $$\\frac{\\partial L}{\\partial w_{21}}=1.944\\cdot2=3.888,\\qquad
+                \\frac{\\partial L}{\\partial w_{22}}=1.944\\cdot1=1.944,\\qquad
+                \\frac{\\partial L}{\\partial b_2}=1.944.$$
+            </p>
+            <p><strong>Update with $\\eta=0.02$:</strong></p>
+            <p>
+              $$w_{11}=0.60368,\\quad w_{12}=-0.44816,\\quad b_1=0.15184,$$
+              $$w_{21}=-0.32776,\\quad w_{22}=0.96112,\\quad b_2=-0.03888,$$
+              $$v_1=0.83888,\\quad v_2=-0.5676,\\quad b_{out}=0.2648.$$
+            </p>
+            <p><strong>New forward pass:</strong></p>
+            <p>
+              $$z_1=0.91104,\\quad z_2=0.26672,$$
+              $$\\hat y\\approx0.877663,\\qquad L\\approx1.25964.$$
+              The loss decreased from $2.6244$ to about $1.2596$.
+            </p>
+            <p><strong>Exact fractions (optional check):</strong></p>
+            <ul class="answer-list">
+              <li>$\\hat y_0=19/50$, $L_0=6561/2500$</li>
+              <li>$\\partial L/\\partial\\hat y=-81/25$</li>
+              <li>$\\partial L/\\partial v_1=-243/125$, $\\partial L/\\partial v_2=-81/50$</li>
+              <li>$\\partial L/\\partial w_{11}=-648/125$, $\\partial L/\\partial w_{21}=486/125$</li>
+              <li>$w_{11}=3773/6250$, $w_{21}=-4097/12500$</li>
+            </ul>
+          </details>
+        </div>
+      </section>
+
       <section class="chapter-section" id="labs">
-        <h2 class="section-title"><span class="section-index">9.4</span> Labs</h2>
+        <h2 class="section-title"><span class="section-index">9.6</span> Labs</h2>
         <div data-widget="backprop-graph"></div>
         <div data-widget="gradient-check"></div>
       </section>
 
       <section class="chapter-section" id="check">
-        <h2 class="section-title"><span class="section-index">9.5</span> Check your understanding</h2>
+        <h2 class="section-title"><span class="section-index">9.7</span> Check your understanding</h2>
         <div data-widget="backprop-quiz"></div>
 
         <h3 class="section-title" style="font-size:22px;margin-top:34px">
-          <span class="section-index">9.6</span> Mastery checklist
+          <span class="section-index">9.8</span> Mastery checklist
         </h3>
         ${MS.ui.checklist(9, [
           "Draw the computational graph for a two-layer MLP.",
@@ -206,7 +455,7 @@
       </section>
 
       <section class="chapter-section">
-        <h2 class="section-title"><span class="section-index">9.7</span> Reading</h2>
+        <h2 class="section-title"><span class="section-index">9.9</span> Reading</h2>
         ${MS.ui.readingList([
           { title: "Goodfellow, Bengio & Courville, Deep Learning — Chapter 6", source: "Backpropagation and computational graphs" },
           { title: "Nielsen, Neural Networks and Deep Learning — Chapter 2", source: "A step-by-step derivation of backpropagation" },

@@ -265,6 +265,145 @@
   text-align: center;
 }
 
+.worked-example {
+  margin: 1.8em 0;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+}
+
+.worked-example h3 {
+  margin: 0 0 4px;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.worked-example .example-intro {
+  margin: 0 0 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.example-step {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 12px;
+  padding: 13px 0;
+  border-top: 1px dashed var(--border);
+}
+
+.example-step:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.step-number {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.example-step h4 {
+  margin: 0 0 5px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.example-step p {
+  margin: 0 0 0.6em;
+  font-size: 15px;
+}
+
+.example-step p:last-child {
+  margin-bottom: 0;
+}
+
+.example-check {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 13.5px;
+}
+
+.exercise-card {
+  margin: 1.8em 0;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--amber);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+}
+
+.exercise-card h3 {
+  margin: 0 0 4px;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.exercise-card .exercise-intro {
+  margin: 0 0 14px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.exercise-card ol {
+  margin: 0 0 14px;
+  padding-left: 1.35em;
+}
+
+.exercise-card li {
+  margin: 0.4em 0;
+  font-size: 15px;
+}
+
+details.solution {
+  margin-top: 14px;
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+}
+
+details.solution summary {
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+details.solution[open] summary {
+  margin-bottom: 10px;
+}
+
+details.solution p {
+  font-size: 14.5px;
+}
+
+details.solution .answer-list {
+  margin: 8px 0 0;
+  padding-left: 1.35em;
+}
+
+details.solution .answer-list li {
+  margin: 0.3em 0;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
 .symbol-table {
   margin: -0.35em 0 1.4em;
   overflow: hidden;

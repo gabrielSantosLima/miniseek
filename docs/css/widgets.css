@@ -593,6 +593,98 @@
 }
 
 /* --------------------------------------------------------------------------
+   Attention heatmap
+   -------------------------------------------------------------------------- */
+
+.attention-grid {
+  display: grid;
+  grid-template-columns: 40px repeat(3, minmax(48px, 1fr));
+  gap: 6px;
+  align-items: stretch;
+}
+
+.attention-axis {
+  display: grid;
+  place-items: center;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.attention-cell {
+  display: grid;
+  place-items: center;
+  min-height: 46px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 160ms ease;
+}
+
+.attention-cell.masked {
+  color: var(--text-faint);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--bg-soft),
+    var(--bg-soft) 5px,
+    var(--bg) 5px,
+    var(--bg) 10px
+  );
+}
+
+.attention-legend {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.attention-scale {
+  width: 120px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--bg-soft), var(--accent));
+}
+
+/* --------------------------------------------------------------------------
+   Training configuration
+   -------------------------------------------------------------------------- */
+
+.config-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.config-item {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.config-item span {
+  display: block;
+  color: var(--text-faint);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.config-item strong {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+/* --------------------------------------------------------------------------
    Chain-rule builder
    -------------------------------------------------------------------------- */
 

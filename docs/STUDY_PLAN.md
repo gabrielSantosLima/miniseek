@@ -1578,9 +1578,9 @@ one item at level 5.
 
 ## 7. What Comes After This Plan
 
-> **Implementation status (2026-11-08):** the guide shell, reusable exercise
-> framework, and Chapters 1–14 are implemented in `docs/index.html`. Chapters
-> 15–18 appear as planned placeholders and will be written in order.
+> **Implementation status (2026-11-08):** all 18 chapters of the guide are
+> implemented in `docs/index.html`, including theory, worked examples,
+> interactive labs, quizzes, and mastery checklists.
 
 Once this plan is approved:
 
